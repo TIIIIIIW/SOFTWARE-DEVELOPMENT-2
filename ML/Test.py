@@ -14,7 +14,7 @@ def getData(tickers) :
     return data
 
 
-class Test(unittest.TestCase):
+class Testgetdata(unittest.TestCase):
     def test_getData(self):
         tickers = ['ACE.BK', 'KBANK.BK']
         data = getData(tickers)
@@ -26,8 +26,9 @@ class Test(unittest.TestCase):
             self.assertEqual(df['Symbol'].unique()[0], symbol)
 
     def test_getData_noInput(self):
-        result = getData([])
-        assert result == 'No stock name'
+        tickers = []
+        data = getData(tickers)
+        self.assertEqual(data, 'No stock name')
 
 if __name__ == '__main__':
     unittest.main()

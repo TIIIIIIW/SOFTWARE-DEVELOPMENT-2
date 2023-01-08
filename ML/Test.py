@@ -2,7 +2,7 @@ import pandas as pd
 import yfinance as yf
 from datetime import datetime
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 #--------------------------------------------------------------------------------------------------------#
 
@@ -36,35 +36,55 @@ class Testgetdata(unittest.TestCase):
 
 #--------------------------------------------------------------------------------------------------------#
 
-def updateData(tickers):
-    if tickers == []:
-        return 'No stock name'
-    stock_data = pd.read_csv('stock_dataTest.csv')
-    new_data = [stock_data]
+def readCSV(name):
+    stock_data = pd.read_csv(name)
     stock_data['Datetime'] = pd.to_datetime(stock_data['Datetime'], format='%Y/%m/%d')
     start_date = max(stock_data['Datetime'])
-    today_date = datetime.now()
-    for ticker in tickers:
-        detail = yf.download(ticker, interval='1h', start=start_date, end=today_date)
-        detail['Symbol'] = ticker[:-3]
-        table_price = detail.reset_index()
-        new_data.append(table_price)
+    return start_date, stock_data
+
+def updateData(ticker, start_date):
+    detail = yf.download(ticker, interval='1h', start=start_date)
+    detail['Symbol'] = ticker[:-3]
+    table_price = detail.reset_index()
+    return table_price
+
+def combineData(stock_data, table_price):
+    new_data = [stock_data]
+    new_data.append(table_price)
     new_table = pd.concat(new_data)
     duplicate = new_table[['Datetime','Symbol']].duplicated(keep='first')
     new_table = new_table.drop(new_table[duplicate].index)
     new_table = new_table.sort_values(by=['Symbol', 'Datetime'], ascending=True)
     new_table.to_csv('stock_dataTest.csv', index=False)
+    return new_table
 
 
 class Testupdatedata(unittest.TestCase):
-    def test_updateNoInput(self):
-        result = updateData([])
-        self.assertEqual(result, 'No stock name')
+    def test_updateData(self):
+        mock_yfinance = MagicMock()
+        yf.download = mock_yfinance
+        mock_yfinance.download.return_value = pd.DataFrame({
+            'Open': [10],
+            'High': [15],
+            'Low': [5],
+            'Close': [10],
+            'Adj Close': [10],
+            'Volume': [100]}, index=[pd.to_datetime('2020-01-01', format='%Y/%m/%d')]).rename_axis('Datetime')
 
-    # @patch('stock_dataTest.csv')
-    # @patch('yf.download')
-    # def test_updateData(self, mock_yf_download, mock_csv):
+        with unittest.mock.patch('yfinance.download', mock_yfinance.download):
 
+            result = updateData('test.bk', pd.to_datetime('2022-12-30', format='%Y/%m/%d'))
+
+            assert result.equals(pd.DataFrame({
+                'Datetime': [pd.to_datetime('2020-01-01', format='%Y/%m/%d')],
+                'Open': [10],
+                'High': [15],
+                'Low': [5],
+                'Close': [10],
+                'Adj Close': [10],
+                'Volume': [100],
+                'Symbol': ['test']
+            }))
 
 #--------------------------------------------------------------------------------------------------------#
 

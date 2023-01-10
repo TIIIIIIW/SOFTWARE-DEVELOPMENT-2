@@ -55,7 +55,7 @@ def combineData(stock_data, table_price):
     duplicate = new_table[['Datetime','Symbol']].duplicated(keep='first')
     new_table = new_table.drop(new_table[duplicate].index)
     new_table = new_table.sort_values(by=['Symbol', 'Datetime'], ascending=True)
-    new_table.to_csv('stock_dataTest.csv', index=False)
+    # new_table.to_csv('stock_dataTest.csv', index=False)
     return new_table
 
 
@@ -64,12 +64,9 @@ class Testupdatedata(unittest.TestCase):
         mock_yfinance = MagicMock()
         yf.download = mock_yfinance
         mock_yfinance.download.return_value = pd.DataFrame({
-            'Open': [10],
-            'High': [15],
-            'Low': [5],
-            'Close': [10],
-            'Adj Close': [10],
-            'Volume': [100]}, index=[pd.to_datetime('2020-01-01', format='%Y/%m/%d')]).rename_axis('Datetime')
+            'Open': [10],'High': [15],'Low': [5],'Close': [10],
+            'Adj Close': [10],'Volume': [100]},
+             index=[pd.to_datetime('2020-01-01', format='%Y/%m/%d')]).rename_axis('Datetime')
 
         with unittest.mock.patch('yfinance.download', mock_yfinance.download):
 
@@ -77,13 +74,29 @@ class Testupdatedata(unittest.TestCase):
 
             assert result.equals(pd.DataFrame({
                 'Datetime': [pd.to_datetime('2020-01-01', format='%Y/%m/%d')],
-                'Open': [10],
-                'High': [15],
-                'Low': [5],
-                'Close': [10],
-                'Adj Close': [10],
-                'Volume': [100],
-                'Symbol': ['test']
+                'Open': [10],'High': [15],'Low': [5],'Close': [10],
+                'Adj Close': [10],'Volume': [100],'Symbol': ['test']
+            }))
+
+    def test_combineData(self):
+        table_price = pd.DataFrame({
+                'Datetime': [pd.to_datetime('2020-01-01', format='%Y/%m/%d')],
+                'Open': [10], 'High': [15], 'Low': [5], 'Close': [10],'Adj Close': [10], 
+                'Volume': [100], 'Symbol': ['test']})
+
+        stock_data = pd.DataFrame({
+                'Datetime': [pd.to_datetime('2020-01-02', format='%Y/%m/%d')],
+                'Open': [10], 'High': [15], 'Low': [5], 'Close': [10], 'Adj Close': [10],
+                'Volume': [100], 'Symbol': ['test']})
+
+        result = combineData(stock_data, table_price).reset_index(drop=True)
+
+        assert result.equals(pd.DataFrame({
+                'Datetime': [pd.to_datetime('2020-01-01', format='%Y/%m/%d'), 
+                             pd.to_datetime('2020-01-02', format='%Y/%m/%d')],
+                'Open': [10,10], 'High': [15,15], 'Low': [5,5],
+                'Close': [10,10], 'Adj Close': [10,10], 'Volume': [100,100],
+                'Symbol': ['test','test']
             }))
 
 #--------------------------------------------------------------------------------------------------------#

@@ -1,0 +1,21 @@
+def loaddata(self):
+        conn = sqlite3.connect('share.sqlite')
+        cursor = conn.cursor()
+        sqlquery = """SELECT SP."Date",SP.Open,Sp.High,SP.Low,SP.Close,SP.Volume,I.Symbol 
+                FROM Stock_price_day as SP 
+                INNER JOIN Information as I 
+                on I.SymbolId = SP.SymbolId;
+                """
+        result = conn.execute(sqlquery)
+        self.tableWidget.setRowCount(0)
+
+        for row_num, row_data in enumerate(result):
+            self.tableWidget.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+
+        conn.close()
+
+self.tableWidget.setColumnWidth(0, 148)
+
+self.pushButton.clicked.connect(self.loaddata)

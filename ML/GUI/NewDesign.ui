@@ -197,7 +197,7 @@
       <x>120</x>
       <y>280</y>
       <width>421</width>
-      <height>251</height>
+      <height>271</height>
      </rect>
     </property>
     <row>
@@ -240,6 +240,11 @@
       <string>Business Type</string>
      </property>
     </row>
+    <column>
+     <property name="text">
+      <string>Information</string>
+     </property>
+    </column>
    </widget>
    <zorder>tableWidget_infoset100</zorder>
    <zorder>tableWidget_set100</zorder>

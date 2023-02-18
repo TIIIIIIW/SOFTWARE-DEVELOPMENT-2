@@ -16,7 +16,7 @@ class Ui_MainWindow(object):
     ###############################
     def loadSet100(self):
         selected_item = self.comboBox_set100.currentText()
-        conn = sqlite3.connect('share.sqlite')
+        conn = sqlite3.connect('newshare.sqlite')
         cursor = conn.cursor()
         sqlquery = f"""SELECT SP."Date",SP.Open,Sp.High,SP.Low,SP.Close,SP.Volume,I.Symbol 
                 FROM Stock_price_day as SP 
@@ -28,13 +28,38 @@ class Ui_MainWindow(object):
                 """
         result = conn.execute(sqlquery)
         self.tableWidget_set100.setRowCount(0)
-
         for row_num, row_data in enumerate(result):
             self.tableWidget_set100.insertRow(row_num)
             for column_num, data in enumerate(row_data):
                 self.tableWidget_set100.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
-
         conn.close()
+
+    # def infoSet100(self):
+    #     selected_item = self.comboBox_set100.currentText()
+    #     conn = sqlite3.connect('newshare.sqlite')
+    #     cursor = conn.cursor()
+    #     sqlquery = f"""SELECT Symbol FROM Information WHERE Symbol = '{selected_item}'
+    #                     UNION ALL
+    #                     SELECT Market FROM Information WHERE Symbol = '{selected_item}'
+    #                     UNION ALL
+    #                     SELECT Short_Industry FROM Industry INNER JOIN Information ON Industry.IndustryId = Information.IndustryId WHERE Symbol = '{selected_item}'
+    #                     UNION ALL
+    #                     SELECT Full_Industry FROM Industry INNER JOIN Information ON Industry.IndustryId = Information.IndustryId WHERE Symbol = '{selected_item}'
+    #                     UNION ALL
+    #                     SELECT Short_Sector FROM Sector INNER JOIN Information ON Sector.SectorId = Information.SectorId WHERE Symbol = '{selected_item}'
+    #                     UNION ALL
+    #                     SELECT Full_Sector FROM Sector INNER JOIN Information ON Sector.SectorId = Information.SectorId WHERE Symbol = '{selected_item}'
+    #                     UNION ALL
+    #                     SELECT "Dividend Policy" FROM Information WHERE Symbol = '{selected_item}'
+    #                     UNION ALL
+    #                     SELECT "Business Type" FROM Information WHERE Symbol = '{selected_item}';
+    #             """
+    #     result = conn.execute(sqlquery)
+    #     self.tableWidget_infoset100.setRowCount(0)
+    #     for row_num, row_data in enumerate(result):
+    #         for column_num, data in enumerate(row_data):
+    #             self.tableWidget_infoset100.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+    #     conn.close()
     ###############################
 
     def setupUi(self, MainWindow):
@@ -81,6 +106,7 @@ class Ui_MainWindow(object):
         self.comboBox_set100.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
         self.comboBox_set100.setFont(QtGui.QFont('Arial', 15))
         self.comboBox_set100.currentIndexChanged.connect(self.loadSet100)
+        # self.comboBox_set100.currentIndexChanged.connect(self.infoSet100)
         ###############################
 
         self.pushButton_loadset100 = QtWidgets.QPushButton(self.centralwidget)
@@ -219,6 +245,6 @@ if __name__ == "__main__":
     ###############################
     ui.comboBox_set100.addItems(combobox_value())
     ###############################
-    
+
     MainWindow.show()
     sys.exit(app.exec_())

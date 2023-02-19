@@ -246,6 +246,16 @@
      </property>
     </column>
    </widget>
+   <widget class="QGraphicsView" name="graphicsView">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>280</y>
+      <width>1131</width>
+      <height>651</height>
+     </rect>
+    </property>
+   </widget>
    <zorder>tableWidget_infoset100</zorder>
    <zorder>tableWidget_set100</zorder>
    <zorder>horizontalLayoutWidget</zorder>
@@ -253,6 +263,7 @@
    <zorder>pushButton_loadset100</zorder>
    <zorder>pushButton_dataset100</zorder>
    <zorder>pushButton_infoset100</zorder>
+   <zorder>graphicsView</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

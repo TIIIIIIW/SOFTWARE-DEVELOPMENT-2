@@ -1,3 +1,8 @@
+import sys
+from PyQt5.QtCore import *
+from PyQt5.QtWebEngineWidgets import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sqlite3
 
@@ -188,13 +193,31 @@ class Ui_MainWindow(object):
         self.pushButton_infoset100.clicked.connect(self.tableWidget_infoset100.show) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        ###############################
+        layout = QtWidgets.QVBoxLayout(MainWindow)
+        TW = QtWidgets.QTabWidget(MainWindow)
+
+        web1 = QWebEngineView(MainWindow)
+        web1.load(QUrl("http://127.0.0.1:8050/"))
+        # web2 = QWebEngineView()
+        # web2.load(QUrl("http://www.google.com"))
+
+        TW.addTab(web1, 'Price&Volume Graph')
+        # TW.addTab(web2, 'Other')
+        layout.addWidget(TW)
+
+        widget = QWidget(MainWindow)
+        widget.setLayout(layout)
+        widget.setGeometry(QtCore.QRect(570, 250, 1143, 690))
+        ###############################
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.pushButton_set100.setText(_translate("MainWindow", "SET100"))
         self.pushButton_nasdaq.setText(_translate("MainWindow", "NASDAQ"))
         self.pushButton_crypto.setText(_translate("MainWindow", "CRYPTO"))
-        self.pushButton_loadset100.setText(_translate("MainWindow", "Graph"))
+        self.pushButton_loadset100.setText(_translate("MainWindow", "Update"))
         self.pushButton_dataset100.setText(_translate("MainWindow", "Data"))
         self.pushButton_infoset100.setText(_translate("MainWindow", "Information"))
 

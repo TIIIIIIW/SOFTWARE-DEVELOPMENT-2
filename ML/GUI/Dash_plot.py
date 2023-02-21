@@ -1,5 +1,6 @@
 from dash import Dash, html, dcc, Input, Output
 import plotly.graph_objs as go
+from plotly.subplots import make_subplots
 import sqlite3
 import pandas as pd
 
@@ -42,11 +43,15 @@ def update_candlestick_chart(value):
     my_range = pd.date_range(start= min(df_plot['Date']), end= max(df_plot['Date']), freq='D')
     missing_date = my_range.difference(df_plot['Date']).strftime("%Y-%m-%d").tolist()
 
-    candles = go.Figure(data=[go.Candlestick(x=df_plot['Date'],
+    candles = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.05)
+    candles.add_trace(go.Candlestick(x=df_plot['Date'],
                                          open=df_plot['Open'],
                                          high=df_plot['High'],
                                          low=df_plot['Low'],
-                                         close=df_plot['Close'])])
+                                         close=df_plot['Close']), row=1, col=1)
+
+    candles.add_trace(go.Bar(x=df_plot['Date'],
+                                y=df_plot['Volume'],), row=2, col=1)
 
     candles.update_xaxes(
     rangebreaks=[

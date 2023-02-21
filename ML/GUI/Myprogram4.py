@@ -8,7 +8,7 @@ import sqlite3
 
 ###############################
 def combobox_value():
-    conn = sqlite3.connect('share.sqlite')
+    conn = sqlite3.connect('newshare.sqlite')
     cursor = conn.cursor()
     cursor.execute("SELECT Symbol FROM Information ORDER BY Symbol ASC")
     result = cursor.fetchall()

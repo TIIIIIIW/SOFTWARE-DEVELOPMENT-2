@@ -1,35 +1,72 @@
-import sys
-from PyQt5.QtCore import *
-from PyQt5.QtWebEngineWidgets import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
+import pandas as pd
+from dash import Dash, html, dcc, Input, Output
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
-class CustomMainWindow(QMainWindow):
-    def __init__(self, *args, **kwargs):
-        super(CustomMainWindow, self).__init__(*args, **kwargs)
+import sqlite3
 
-        layout = QVBoxLayout()
+# Load the data
+conn = sqlite3.connect('newshare.sqlite')
 
-        TW = QTabWidget()
+df = pd.read_sql("""SELECT SP."Date", SP.Open, SP.High, SP.Low, SP.Close, SP."Adj Close", SP.Volume, I.Symbol 
+                     FROM Stock_price_day as SP 
+                     INNER JOIN Information as I 
+                     ON I.SymbolId = SP.SymbolId
+                     WHERE Symbol = 'KBANK';"""
+                     ,conn)
 
-        web1 = QWebEngineView()
-        web1.load(QUrl("http://www.google.com"))
-        
+# Define the app
+app = Dash(__name__)
 
-        web2 = QWebEngineView()
-        web2.load(QUrl("http://www.google.com"))
+# Define the layout
+app.layout = html.Div(children=[
+    html.H1(children='Candlestick with Volume'),
 
-        TW.addTab(web1, 'web1')
-        TW.addTab(web2, 'web2')
-        layout.addWidget(TW)
+    dcc.Graph(
+        id='candlestick-volume',
+        figure={
+            'data': [],
+            'layout': {
+                'title': 'Candlestick with Volume',
+                'yaxis': {'title': 'Price'},
+                'yaxis2': {'title': 'Volume', 'overlaying': 'y', 'side': 'right'},
+                'xaxis': {'title': 'Date'}
+            }
+        }
+    )
+])
 
-        widget = QWidget()
-        widget.setLayout(layout)
-        self.setCentralWidget(widget)
-        self.resize(1131, 651)
+# Define the callback
+@app.callback(Output('candlestick-volume', 'figure'), [Input('candlestick-volume', 'relayoutData')])
+def update_graph(relayoutData):
+    # Define the figure
+    fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.05)
 
-app = QApplication(sys.argv)
+    # Add the candlestick chart
+    fig.add_trace(go.Candlestick(x=df['Date'],
+                                 open=df['Open'],
+                                 high=df['High'],
+                                 low=df['Low'],
+                                 close=df['Close'],
+                                 name='Candlestick'), row=1, col=1)
 
-CMWindow = CustomMainWindow() 
-CMWindow.show()
-sys.exit(app.exec ())
+    # Add the volume chart
+    fig.add_trace(go.Bar(x=df['Date'],
+                         y=df['Volume'],
+                         name='Volume'), row=2, col=1)
+
+    # Update the layout
+    fig.update_layout(title='Candlestick with Volume',
+                      yaxis=dict(title='Price'),
+                      yaxis2=dict(title='Volume', overlaying='y', side='right'),
+                      xaxis=dict(title='Date'))
+
+    # Apply the relayoutData
+    if relayoutData:
+        fig.update_layout(relayoutData=relayoutData)
+
+    return fig
+
+# Run the app
+if __name__ == '__main__':
+    app.run_server(debug=True)

@@ -1,60 +1,82 @@
-from dash import Dash, html, dcc, Input, Output
+import dash
+from dash import html, dcc
+from dash.dependencies import Input, Output
 import plotly.graph_objs as go
-import sqlite3
+from plotly.subplots import make_subplots
 import pandas as pd
 
-conn = sqlite3.connect('share.sqlite')
+# Load data
+df = pd.read_csv("https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv")
 
-def get_stock_names():
-    query = """SELECT DISTINCT Symbol 
-                FROM Stock_price_day as SP 
-                INNER JOIN Information as I 
-                on I.SymbolId = SP.SymbolId"""
-    cursor = conn.execute(query)
-    stock_names = [row[0] for row in cursor.fetchall()]
-    return stock_names
+# Create subplots
+fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.05)
 
-df = pd.read_sql("""SELECT SP."Date", SP.Open, SP.High, SP.Low, SP.Close, SP."Adj Close", SP.Volume, I.Symbol 
-                     FROM Stock_price_day as SP 
-                     INNER JOIN Information as I 
-                     ON I.SymbolId = SP.SymbolId;"""
-                     ,conn)
+# Add candlestick chart
+fig.add_trace(go.Candlestick(x=df['Date'],
+                             open=df['AAPL.Open'],
+                             high=df['AAPL.High'],
+                             low=df['AAPL.Low'],
+                             close=df['AAPL.Close'],
+                             name='Candlestick'),
+              row=1, col=1)
 
-app = Dash()
+# Add volume chart
+fig.add_trace(go.Bar(x=df['Date'],
+                     y=df['AAPL.Volume'],
+                     name='Volume'),
+              row=2, col=1)
 
-app.layout = html.Div([
-    html.H1('Stock Prices'),
-    html.Div([
-        html.Label('Choose a stock:'),
-        dcc.Dropdown(
-            id='stock_dropdown',
-            options=[{'label': stock, 'value': stock} for stock in get_stock_names()],
-            value=get_stock_names()[0]
-        ),
-    ], style={'width': '30%', 'display': 'inline-block'}),
-    dcc.Graph(id='candles')
+# Update layout
+fig.update_layout(height=600, title_text="Candlestick and Volume Chart")
+
+# Create Dash app
+app = dash.Dash(__name__)
+
+# Define dropdown options
+dropdown_options = [{'label': 'Hour', 'value': '1H'},
+                    {'label': 'Day', 'value': '1D'},
+                    {'label': 'Week', 'value': '1W'},
+                    {'label': 'Month', 'value': '1M'}]
+
+# Define app layout
+app.layout = html.Div(children=[
+    html.Label('Select timeframe:'),
+    dcc.Dropdown(id='timeframe-dropdown', options=dropdown_options, value='1H', clearable=False),
+    dcc.Graph(id='graph', figure=fig),
+    html.Br(),
 ])
 
-@app.callback(Output('candles', 'figure'),Input('stock_dropdown', 'value'))
-def update_candlestick_chart(value):
+# Define callback to update chart based on dropdown selection
+@app.callback(Output('graph', 'figure'),
+              [Input('timeframe-dropdown', 'value')])
+def update_chart(timeframe):
+    # Filter data based on selected timeframe
+    if timeframe == '1H':
+        df_filtered = df[-252:]
+    elif timeframe == '1D':
+        df_filtered = df[-126:]
+    elif timeframe == '1W':
+        df_filtered = df[-63:]
+    elif timeframe == '1M':
+        df_filtered = df[-21:]
     
-    df_plot = df[(df['Symbol'] == value)].tail(100)
+    # Create new chart based on filtered data
+    fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.05)
+    fig.add_trace(go.Candlestick(x=df_filtered['Date'],
+                                 open=df_filtered['AAPL.Open'],
+                                 high=df_filtered['AAPL.High'],
+                                 low=df_filtered['AAPL.Low'],
+                                 close=df_filtered['AAPL.Close'],
+                                 name='Candlestick'),
+                  row=1, col=1)
+    fig.add_trace(go.Bar(x=df_filtered['Date'],
+                         y=df_filtered['AAPL.Volume'],
+                         name='Volume'),
+                  row=2, col=1)
+    fig.update(layout_xaxis_rangeslider_visible=False)
+    
+    return fig
 
-    my_range = pd.date_range(start= min(df_plot['Date']), end= max(df_plot['Date']), freq='D')
-    missing_date = my_range.difference(df_plot['Date']).strftime("%Y-%m-%d").tolist()
-
-    candles = go.Figure(data=[go.Candlestick(x=df_plot['Date'],
-                                         open=df_plot['Open'],
-                                         high=df_plot['High'],
-                                         low=df_plot['Low'],
-                                         close=df_plot['Close'])])
-
-    candles.update_xaxes(
-    rangebreaks=[
-        dict(bounds=["sat", "mon"]), dict(values=missing_date)])
-    candles.update(layout_xaxis_rangeslider_visible=False)
-
-    return candles
-
+# Run app
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, port=8000)

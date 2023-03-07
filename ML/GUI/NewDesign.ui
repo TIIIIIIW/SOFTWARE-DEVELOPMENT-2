@@ -29,10 +29,10 @@
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>-30</y>
-      <width>1581</width>
-      <height>202</height>
+      <x>30</x>
+      <y>10</y>
+      <width>1761</width>
+      <height>61</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -41,7 +41,7 @@
        <property name="minimumSize">
         <size>
          <width>150</width>
-         <height>100</height>
+         <height>50</height>
         </size>
        </property>
        <property name="font">
@@ -59,7 +59,7 @@
        <property name="minimumSize">
         <size>
          <width>150</width>
-         <height>100</height>
+         <height>50</height>
         </size>
        </property>
        <property name="font">
@@ -77,7 +77,7 @@
        <property name="minimumSize">
         <size>
          <width>150</width>
-         <height>100</height>
+         <height>50</height>
         </size>
        </property>
        <property name="font">
@@ -95,9 +95,9 @@
    <widget class="QComboBox" name="comboBox_set100">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>150</y>
-      <width>1341</width>
+      <x>30</x>
+      <y>90</y>
+      <width>1531</width>
       <height>41</height>
      </rect>
     </property>
@@ -105,8 +105,8 @@
    <widget class="QPushButton" name="pushButton_loadset100">
     <property name="geometry">
      <rect>
-      <x>1500</x>
-      <y>150</y>
+      <x>1590</x>
+      <y>90</y>
       <width>201</width>
       <height>41</height>
      </rect>
@@ -117,14 +117,14 @@
      </font>
     </property>
     <property name="text">
-     <string>Graph</string>
+     <string>Update</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_dataset100">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>220</y>
+      <x>140</x>
+      <y>160</y>
       <width>81</width>
       <height>31</height>
      </rect>
@@ -136,8 +136,8 @@
    <widget class="QPushButton" name="pushButton_infoset100">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>220</y>
+      <x>240</x>
+      <y>160</y>
       <width>81</width>
       <height>31</height>
      </rect>
@@ -149,10 +149,10 @@
    <widget class="QTableWidget" name="tableWidget_set100">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>280</y>
+      <x>30</x>
+      <y>220</y>
       <width>421</width>
-      <height>651</height>
+      <height>711</height>
      </rect>
     </property>
     <column>
@@ -194,8 +194,8 @@
    <widget class="QTableWidget" name="tableWidget_infoset100">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>280</y>
+      <x>30</x>
+      <y>220</y>
       <width>421</width>
       <height>271</height>
      </rect>
@@ -246,16 +246,256 @@
      </property>
     </column>
    </widget>
-   <widget class="QGraphicsView" name="graphicsView">
+   <widget class="QTableWidget" name="tableWidget_nasdaq">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>280</y>
-      <width>1131</width>
-      <height>651</height>
+      <x>30</x>
+      <y>220</y>
+      <width>421</width>
+      <height>711</height>
+     </rect>
+    </property>
+    <column>
+     <property name="text">
+      <string>Date</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Open</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>High</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Low</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Close</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Volume</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Symbol</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QTableWidget" name="tableWidget_crypto">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>220</y>
+      <width>421</width>
+      <height>711</height>
+     </rect>
+    </property>
+    <column>
+     <property name="text">
+      <string>Date</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Open</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>High</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Low</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Close</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Volume</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Symbol</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QTableWidget" name="tableWidget_infonasdaq">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>220</y>
+      <width>421</width>
+      <height>271</height>
+     </rect>
+    </property>
+    <row>
+     <property name="text">
+      <string>Symbol</string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>Market</string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>Industry Symbol</string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>Industry</string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>Sector Symbol</string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>Sector</string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>Dividend Policy</string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>Business Type</string>
+     </property>
+    </row>
+    <column>
+     <property name="text">
+      <string>Information</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QPushButton" name="pushButton_datanasdaq">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>160</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Data</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_datacrypto">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>160</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Data</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_infonasdaq">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>160</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Information</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_nasdaq">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>90</y>
+      <width>1531</width>
+      <height>41</height>
      </rect>
     </property>
    </widget>
+   <widget class="QComboBox" name="comboBox_crypto">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>90</y>
+      <width>1531</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_loadnasdaq">
+    <property name="geometry">
+     <rect>
+      <x>1590</x>
+      <y>90</y>
+      <width>201</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Update</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_loadcrypto">
+    <property name="geometry">
+     <rect>
+      <x>1590</x>
+      <y>90</y>
+      <width>201</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Update</string>
+    </property>
+   </widget>
+   <zorder>pushButton_loadcrypto</zorder>
+   <zorder>pushButton_loadnasdaq</zorder>
+   <zorder>comboBox_crypto</zorder>
+   <zorder>comboBox_nasdaq</zorder>
+   <zorder>tableWidget_crypto</zorder>
+   <zorder>tableWidget_nasdaq</zorder>
+   <zorder>pushButton_datacrypto</zorder>
+   <zorder>pushButton_datanasdaq</zorder>
+   <zorder>pushButton_infonasdaq</zorder>
+   <zorder>tableWidget_infonasdaq</zorder>
    <zorder>tableWidget_infoset100</zorder>
    <zorder>tableWidget_set100</zorder>
    <zorder>horizontalLayoutWidget</zorder>
@@ -263,7 +503,6 @@
    <zorder>pushButton_loadset100</zorder>
    <zorder>pushButton_dataset100</zorder>
    <zorder>pushButton_infoset100</zorder>
-   <zorder>graphicsView</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -286,8 +525,8 @@
    <slot>show()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>129</x>
-     <y>255</y>
+     <x>140</x>
+     <y>211</y>
     </hint>
     <hint type="destinationlabel">
      <x>130</x>
@@ -303,11 +542,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>162</x>
-     <y>258</y>
+     <y>211</y>
     </hint>
     <hint type="destinationlabel">
-     <x>564</x>
-     <y>319</y>
+     <x>450</x>
+     <y>340</y>
     </hint>
    </hints>
   </connection>
@@ -319,7 +558,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>253</x>
-     <y>268</y>
+     <y>211</y>
     </hint>
     <hint type="destinationlabel">
      <x>144</x>
@@ -335,11 +574,523 @@
    <hints>
     <hint type="sourcelabel">
      <x>245</x>
-     <y>245</y>
+     <y>211</y>
     </hint>
     <hint type="destinationlabel">
-     <x>550</x>
-     <y>419</y>
+     <x>450</x>
+     <y>440</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_set100</sender>
+   <signal>clicked()</signal>
+   <receiver>comboBox_set100</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>444</x>
+     <y>75</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>443</x>
+     <y>124</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_set100</sender>
+   <signal>clicked()</signal>
+   <receiver>pushButton_loadset100</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>567</x>
+     <y>68</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1594</x>
+     <y>126</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_set100</sender>
+   <signal>clicked()</signal>
+   <receiver>tableWidget_nasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>398</x>
+     <y>60</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>50</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_set100</sender>
+   <signal>clicked()</signal>
+   <receiver>tableWidget_crypto</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>187</x>
+     <y>56</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>95</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_set100</sender>
+   <signal>clicked()</signal>
+   <receiver>tableWidget_infonasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>518</x>
+     <y>66</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>329</x>
+     <y>253</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_set100</sender>
+   <signal>clicked()</signal>
+   <receiver>pushButton_infonasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>477</x>
+     <y>65</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>285</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_set100</sender>
+   <signal>clicked()</signal>
+   <receiver>pushButton_datanasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>519</x>
+     <y>62</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>183</x>
+     <y>197</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_set100</sender>
+   <signal>clicked()</signal>
+   <receiver>pushButton_datacrypto</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>510</x>
+     <y>68</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>191</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_nasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>pushButton_infonasdaq</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>879</x>
+     <y>66</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>287</x>
+     <y>192</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_nasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>tableWidget_nasdaq</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1067</x>
+     <y>59</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>282</x>
+     <y>281</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_nasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>pushButton_datanasdaq</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1129</x>
+     <y>59</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>182</x>
+     <y>188</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_infonasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>tableWidget_infonasdaq</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>266</x>
+     <y>202</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>71</x>
+     <y>259</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_infonasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>tableWidget_nasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>309</x>
+     <y>201</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>182</x>
+     <y>380</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_datanasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>tableWidget_nasdaq</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>156</x>
+     <y>196</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>283</x>
+     <y>303</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_datanasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>tableWidget_infonasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>211</x>
+     <y>207</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>218</x>
+     <y>251</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_nasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>tableWidget_crypto</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1166</x>
+     <y>70</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>314</x>
+     <y>254</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_nasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>comboBox_set100</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1095</x>
+     <y>64</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1094</x>
+     <y>125</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_nasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>pushButton_loadset100</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1196</x>
+     <y>74</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1639</x>
+     <y>114</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_crypto</sender>
+   <signal>clicked()</signal>
+   <receiver>comboBox_set100</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1258</x>
+     <y>55</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1223</x>
+     <y>119</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_crypto</sender>
+   <signal>clicked()</signal>
+   <receiver>pushButton_loadset100</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1657</x>
+     <y>67</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1664</x>
+     <y>119</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_set100</sender>
+   <signal>clicked()</signal>
+   <receiver>comboBox_nasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>590</x>
+     <y>42</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>719</x>
+     <y>253</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_set100</sender>
+   <signal>clicked()</signal>
+   <receiver>comboBox_crypto</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>591</x>
+     <y>77</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>706</x>
+     <y>332</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_set100</sender>
+   <signal>clicked()</signal>
+   <receiver>pushButton_loadnasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>544</x>
+     <y>80</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1159</x>
+     <y>402</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_set100</sender>
+   <signal>clicked()</signal>
+   <receiver>pushButton_loadcrypto</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>391</x>
+     <y>84</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1084</x>
+     <y>470</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_nasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>comboBox_nasdaq</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>948</x>
+     <y>66</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>945</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_nasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>pushButton_loadnasdaq</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1030</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1184</x>
+     <y>390</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_nasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>comboBox_crypto</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>784</x>
+     <y>60</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>839</x>
+     <y>333</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_nasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>pushButton_loadcrypto</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>806</x>
+     <y>72</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1091</x>
+     <y>485</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_crypto</sender>
+   <signal>clicked()</signal>
+   <receiver>comboBox_nasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1315</x>
+     <y>51</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1248</x>
+     <y>250</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_crypto</sender>
+   <signal>clicked()</signal>
+   <receiver>pushButton_loadnasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1368</x>
+     <y>57</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1223</x>
+     <y>396</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_crypto</sender>
+   <signal>clicked()</signal>
+   <receiver>comboBox_crypto</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1318</x>
+     <y>49</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1142</x>
+     <y>329</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_crypto</sender>
+   <signal>clicked()</signal>
+   <receiver>pushButton_loadcrypto</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1415</x>
+     <y>53</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1249</x>
+     <y>483</y>
     </hint>
    </hints>
   </connection>

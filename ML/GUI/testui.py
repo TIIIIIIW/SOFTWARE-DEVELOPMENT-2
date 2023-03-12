@@ -1,72 +1,61 @@
-import pandas as pd
-from dash import Dash, html, dcc, Input, Output
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
+from PyQt5.QtWidgets import (QWidget, QPushButton,
+    QHBoxLayout, QVBoxLayout, QApplication, QStackedWidget, QLabel)
 
-import sqlite3
+class Example(QWidget):
 
-# Load the data
-conn = sqlite3.connect('newshare.sqlite')
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+        self.stacked_widget.currentChanged.connect(self.set_button_state)
+        self.next_button.clicked.connect(self.next_page)
+        self.prev_button.clicked.connect(self.prev_page)
 
-df = pd.read_sql("""SELECT SP."Date", SP.Open, SP.High, SP.Low, SP.Close, SP."Adj Close", SP.Volume, I.Symbol 
-                     FROM Stock_price_day as SP 
-                     INNER JOIN Information as I 
-                     ON I.SymbolId = SP.SymbolId
-                     WHERE Symbol = 'KBANK';"""
-                     ,conn)
 
-# Define the app
-app = Dash(__name__)
+    def initUI(self):
 
-# Define the layout
-app.layout = html.Div(children=[
-    html.H1(children='Candlestick with Volume'),
+        self.next_button = QPushButton('Next')
+        self.prev_button = QPushButton('Previous')
+        self.next_button.setEnabled(False)
+        self.prev_button.setEnabled(False)
+        self.stacked_widget = QStackedWidget()
 
-    dcc.Graph(
-        id='candlestick-volume',
-        figure={
-            'data': [],
-            'layout': {
-                'title': 'Candlestick with Volume',
-                'yaxis': {'title': 'Price'},
-                'yaxis2': {'title': 'Volume', 'overlaying': 'y', 'side': 'right'},
-                'xaxis': {'title': 'Date'}
-            }
-        }
-    )
-])
+        hbox = QHBoxLayout()
+        hbox.addStretch(1)
+        hbox.addWidget(self.prev_button)
+        hbox.addWidget(self.next_button)
 
-# Define the callback
-@app.callback(Output('candlestick-volume', 'figure'), [Input('candlestick-volume', 'relayoutData')])
-def update_graph(relayoutData):
-    # Define the figure
-    fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.05)
+        vbox = QVBoxLayout()
+        vbox.addWidget(self.stacked_widget)
+        vbox.addLayout(hbox)
 
-    # Add the candlestick chart
-    fig.add_trace(go.Candlestick(x=df['Date'],
-                                 open=df['Open'],
-                                 high=df['High'],
-                                 low=df['Low'],
-                                 close=df['Close'],
-                                 name='Candlestick'), row=1, col=1)
+        self.setLayout(vbox)
 
-    # Add the volume chart
-    fig.add_trace(go.Bar(x=df['Date'],
-                         y=df['Volume'],
-                         name='Volume'), row=2, col=1)
 
-    # Update the layout
-    fig.update_layout(title='Candlestick with Volume',
-                      yaxis=dict(title='Price'),
-                      yaxis2=dict(title='Volume', overlaying='y', side='right'),
-                      xaxis=dict(title='Date'))
+    def set_button_state(self, index):
+        self.prev_button.setEnabled(index > 0)
+        n_pages = len(self.stacked_widget)
+        self.next_button.setEnabled( index % n_pages < n_pages - 1)
 
-    # Apply the relayoutData
-    if relayoutData:
-        fig.update_layout(relayoutData=relayoutData)
+    def insert_page(self, widget, index=-1):
+        self.stacked_widget.insertWidget(index, widget)
+        self.set_button_state(self.stacked_widget.currentIndex())
 
-    return fig
+    def next_page(self):
+        new_index = self.stacked_widget.currentIndex()+1
+        if new_index < len(self.stacked_widget):
+            self.stacked_widget.setCurrentIndex(new_index)
 
-# Run the app
+    def prev_page(self):
+        new_index = self.stacked_widget.currentIndex()-1
+        if new_index >= 0:
+            self.stacked_widget.setCurrentIndex(new_index)
+
 if __name__ == '__main__':
-    app.run_server(debug=True)
+
+    app = QApplication([])
+    ex = Example()
+    for i in range(5):
+        ex.insert_page(QLabel(f'This is page {i+1}'))
+    ex.resize(400,300)
+    ex.show()
+    app.exec()

@@ -1,0 +1,2389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1820</width>
+    <height>920</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1820</width>
+    <height>920</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1820</width>
+    <height>920</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="All" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1821</width>
+      <height>951</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #353535;</string>
+    </property>
+    <widget class="QFrame" name="Header">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>1821</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="pushButton_data">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>20</pointsize>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: #E9EBEF;</string>
+        </property>
+        <property name="text">
+         <string>Data</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_graph">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>20</pointsize>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: #E9EBEF;</string>
+        </property>
+        <property name="text">
+         <string>Graph</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_financial">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>20</pointsize>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: #E9EBEF;</string>
+        </property>
+        <property name="text">
+         <string>Financial</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_news">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>20</pointsize>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: #E9EBEF;</string>
+        </property>
+        <property name="text">
+         <string>News</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="DataPage" native="true">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>80</y>
+       <width>1761</width>
+       <height>791</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: #353535;</string>
+     </property>
+     <widget class="QWidget" name="Data_select" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>321</width>
+        <height>791</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #E9EBEF;</string>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>301</width>
+         <height>180</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QPushButton" name="pushButton_dataset">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #D2D7DF;</string>
+          </property>
+          <property name="text">
+           <string>SET</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_datanasdaq">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #D2D7DF;</string>
+          </property>
+          <property name="text">
+           <string>NASDAQ</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_datacrypto">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #D2D7DF;</string>
+          </property>
+          <property name="text">
+           <string>CRYPTO</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tablenasdaq" native="true">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>0</y>
+        <width>1411</width>
+        <height>791</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #D2D7DF;</string>
+      </property>
+      <widget class="QTableWidget" name="tableWidget_datanasdaq">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1411</width>
+         <height>651</height>
+        </rect>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>1411</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>350</number>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Symbol</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Name</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Market</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Sector</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QComboBox" name="comboBox_datanasdaq">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>670</y>
+         <width>1241</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#ffffff;</string>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="tableWidget_searchnasdaq">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>720</y>
+         <width>1411</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>350</number>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Symbol</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Name</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Market</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Sector</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Destination</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QPushButton" name="pushButton_updatenasdaq">
+       <property name="geometry">
+        <rect>
+         <x>1260</x>
+         <y>670</y>
+         <width>141</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(225, 255, 228);</string>
+       </property>
+       <property name="text">
+        <string>Update</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tableset" native="true">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>0</y>
+        <width>1411</width>
+        <height>791</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #D2D7DF;</string>
+      </property>
+      <widget class="QTableWidget" name="tableWidget_dataset">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1411</width>
+         <height>651</height>
+        </rect>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>1411</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>150</number>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Symbol</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Name</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Market</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Sector</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Destination</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QComboBox" name="comboBox_dataset">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>670</y>
+         <width>1241</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#ffffff;</string>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="tableWidget_searchset">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>720</y>
+         <width>1411</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>150</number>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Symbol</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Name</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Market</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Sector</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Destination</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QPushButton" name="pushButton_updateset">
+       <property name="geometry">
+        <rect>
+         <x>1260</x>
+         <y>670</y>
+         <width>141</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(225, 255, 228);</string>
+       </property>
+       <property name="text">
+        <string>Update</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tablecrypto" native="true">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>0</y>
+        <width>1411</width>
+        <height>791</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #D2D7DF;</string>
+      </property>
+      <widget class="QTableWidget" name="tableWidget_datacrypto">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>611</width>
+         <height>791</height>
+        </rect>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>1411</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>300</number>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Symbol</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Name</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QComboBox" name="comboBox_datacrypto">
+       <property name="geometry">
+        <rect>
+         <x>650</x>
+         <y>20</y>
+         <width>731</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#ffffff;</string>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="tableWidget_searchcrypto">
+       <property name="geometry">
+        <rect>
+         <x>700</x>
+         <y>80</y>
+         <width>611</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>300</number>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Symbol</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Name</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QPushButton" name="pushButton_updatecrypto">
+       <property name="geometry">
+        <rect>
+         <x>1170</x>
+         <y>180</y>
+         <width>141</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(225, 255, 228);</string>
+       </property>
+       <property name="text">
+        <string>Update</string>
+       </property>
+      </widget>
+     </widget>
+     <zorder>Data_select</zorder>
+     <zorder>tablenasdaq</zorder>
+     <zorder>tablecrypto</zorder>
+     <zorder>tableset</zorder>
+    </widget>
+    <widget class="QWidget" name="GraphPage" native="true">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>80</y>
+       <width>1761</width>
+       <height>791</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: #353535;</string>
+     </property>
+     <widget class="QWidget" name="Graph_select" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>321</width>
+        <height>791</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #E9EBEF;</string>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>301</width>
+         <height>180</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QPushButton" name="pushButton_graphset">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #D2D7DF;</string>
+          </property>
+          <property name="text">
+           <string>SET</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_graphnasdaq">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #D2D7DF;</string>
+          </property>
+          <property name="text">
+           <string>NASDAQ</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_graphcrypto">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #D2D7DF;</string>
+          </property>
+          <property name="text">
+           <string>CRYPTO</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="Webview_set" native="true">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>0</y>
+        <width>1411</width>
+        <height>791</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(170, 255, 255);</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="Webview_nasdaq" native="true">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>0</y>
+        <width>1411</width>
+        <height>791</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 255, 0);</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="Webview_crypto" native="true">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>0</y>
+        <width>1411</width>
+        <height>791</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(170, 255, 127);</string>
+      </property>
+     </widget>
+     <zorder>Graph_select</zorder>
+     <zorder>Webview_nasdaq</zorder>
+     <zorder>Webview_crypto</zorder>
+     <zorder>Webview_set</zorder>
+    </widget>
+    <widget class="QWidget" name="FinancialPage" native="true">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>80</y>
+       <width>1761</width>
+       <height>791</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: #353535;</string>
+     </property>
+     <widget class="QWidget" name="Financial_select" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>321</width>
+        <height>791</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #E9EBEF;</string>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>301</width>
+         <height>180</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QPushButton" name="pushButton_fncset">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #D2D7DF;</string>
+          </property>
+          <property name="text">
+           <string>SET</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_fncnasdaq">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #D2D7DF;</string>
+          </property>
+          <property name="text">
+           <string>NASDAQ</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="financeset" native="true">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>0</y>
+        <width>1411</width>
+        <height>791</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #D2D7DF;</string>
+      </property>
+      <widget class="QComboBox" name="comboBox_fncset">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>520</y>
+         <width>1241</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#ffffff;</string>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="tableWidget_fncset">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1411</width>
+         <height>501</height>
+        </rect>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>1411</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>156</number>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Asset</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>TotalDebt</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Equity</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Revenue</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>NetProfit</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>ROA</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>ROE</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Period</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Symbol</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QPushButton" name="pushButton_updatefncset">
+       <property name="geometry">
+        <rect>
+         <x>1260</x>
+         <y>520</y>
+         <width>141</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(225, 255, 228);</string>
+       </property>
+       <property name="text">
+        <string>Update</string>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="tableWidget_searchfncset">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>570</y>
+         <width>1411</width>
+         <height>221</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>156</number>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Asset</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>TotalDebt</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Equity</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Revenue</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>NetProfit</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>ROA</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>ROE</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Period</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Symbol</string>
+        </property>
+       </column>
+      </widget>
+      <zorder>tableWidget_fncset</zorder>
+      <zorder>comboBox_fncset</zorder>
+      <zorder>pushButton_updatefncset</zorder>
+      <zorder>tableWidget_searchfncset</zorder>
+     </widget>
+     <widget class="QWidget" name="financenasdaq" native="true">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>0</y>
+        <width>1411</width>
+        <height>791</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #D2D7DF;</string>
+      </property>
+      <widget class="QComboBox" name="comboBox_fncnasdaq">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>520</y>
+         <width>1241</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#ffffff;</string>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="tableWidget_fncnasdaq">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>1411</width>
+         <height>501</height>
+        </rect>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>1411</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>156</number>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Asset</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>TotalDebt</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Equity</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Revenue</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>NetProfit</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>ROA</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>ROE</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Period</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Symbol</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QPushButton" name="pushButton_updatefncnasdaq">
+       <property name="geometry">
+        <rect>
+         <x>1260</x>
+         <y>520</y>
+         <width>141</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(225, 255, 228);</string>
+       </property>
+       <property name="text">
+        <string>Update</string>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="tableWidget_searchfncnasdaq">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>570</y>
+         <width>1411</width>
+         <height>221</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>156</number>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Asset</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>TotalDebt</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Equity</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Revenue</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>NetProfit</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>ROA</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>ROE</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Period</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Symbol</string>
+        </property>
+       </column>
+      </widget>
+     </widget>
+     <zorder>Financial_select</zorder>
+     <zorder>financenasdaq</zorder>
+     <zorder>financeset</zorder>
+    </widget>
+    <widget class="QWidget" name="NewsPage" native="true">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>80</y>
+       <width>1761</width>
+       <height>791</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: #353535;</string>
+     </property>
+     <widget class="QWidget" name="News_select" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>321</width>
+        <height>791</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #E9EBEF;</string>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget_4">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>301</width>
+         <height>180</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QPushButton" name="pushButton_newsset">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #D2D7DF;</string>
+          </property>
+          <property name="text">
+           <string>SET</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_newsnasdaq">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #D2D7DF;</string>
+          </property>
+          <property name="text">
+           <string>NASDAQ</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_newscrypto">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+           </font>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: #D2D7DF;</string>
+          </property>
+          <property name="text">
+           <string>CRYPTO</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="NewsSet" native="true">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>0</y>
+        <width>1411</width>
+        <height>791</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #D2D7DF;</string>
+      </property>
+      <widget class="QTableWidget" name="tableWidget_newsset">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>70</y>
+         <width>1411</width>
+         <height>721</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+       <column>
+        <property name="text">
+         <string>Date</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Title</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Description</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Link</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Source</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QComboBox" name="comboBox_newsset">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>1241</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_updatenewsset">
+       <property name="geometry">
+        <rect>
+         <x>1260</x>
+         <y>20</y>
+         <width>141</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(225, 255, 228);</string>
+       </property>
+       <property name="text">
+        <string>Update</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="NewsNasdaq" native="true">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>0</y>
+        <width>1411</width>
+        <height>791</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #D2D7DF;</string>
+      </property>
+      <widget class="QTableWidget" name="tableWidget_newsnasdaq">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>70</y>
+         <width>1411</width>
+         <height>721</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+       <column>
+        <property name="text">
+         <string>Date</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Title</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Description</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Link</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Source</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QComboBox" name="comboBox_newsnasdaq">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>1241</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_updatenewsnasdaq">
+       <property name="geometry">
+        <rect>
+         <x>1260</x>
+         <y>20</y>
+         <width>141</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(225, 255, 228);</string>
+       </property>
+       <property name="text">
+        <string>Update</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="NewsCrypto" native="true">
+      <property name="geometry">
+       <rect>
+        <x>350</x>
+        <y>0</y>
+        <width>1411</width>
+        <height>791</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: #D2D7DF;</string>
+      </property>
+      <widget class="QTableWidget" name="tableWidget_newscrypto">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>70</y>
+         <width>1411</width>
+         <height>721</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+       <column>
+        <property name="text">
+         <string>Date</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Title</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Description</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Link</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Source</string>
+        </property>
+       </column>
+      </widget>
+      <widget class="QComboBox" name="comboBox_newscrypto">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>1241</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_updatenewscrypto">
+       <property name="geometry">
+        <rect>
+         <x>1260</x>
+         <y>20</y>
+         <width>141</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(225, 255, 228);</string>
+       </property>
+       <property name="text">
+        <string>Update</string>
+       </property>
+      </widget>
+     </widget>
+     <zorder>News_select</zorder>
+     <zorder>NewsCrypto</zorder>
+     <zorder>NewsNasdaq</zorder>
+     <zorder>NewsSet</zorder>
+    </widget>
+    <zorder>Header</zorder>
+    <zorder>FinancialPage</zorder>
+    <zorder>NewsPage</zorder>
+    <zorder>GraphPage</zorder>
+    <zorder>DataPage</zorder>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1820</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>pushButton_dataset</sender>
+   <signal>clicked()</signal>
+   <receiver>tableset</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>236</x>
+     <y>154</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>498</x>
+     <y>762</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_datanasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>tableset</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>282</x>
+     <y>212</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>434</x>
+     <y>763</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_datacrypto</sender>
+   <signal>clicked()</signal>
+   <receiver>tableset</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>315</x>
+     <y>272</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>452</x>
+     <y>763</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_dataset</sender>
+   <signal>clicked()</signal>
+   <receiver>tablenasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>315</x>
+     <y>154</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>453</x>
+     <y>762</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_datanasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>tablenasdaq</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>323</x>
+     <y>211</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>445</x>
+     <y>761</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_datacrypto</sender>
+   <signal>clicked()</signal>
+   <receiver>tablenasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>329</x>
+     <y>265</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>427</x>
+     <y>763</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_dataset</sender>
+   <signal>clicked()</signal>
+   <receiver>tablecrypto</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>273</x>
+     <y>158</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1062</x>
+     <y>380</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_datanasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>tablecrypto</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>307</x>
+     <y>219</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1097</x>
+     <y>379</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_datacrypto</sender>
+   <signal>clicked()</signal>
+   <receiver>tablecrypto</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>295</x>
+     <y>272</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1082</x>
+     <y>395</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_graph</sender>
+   <signal>clicked()</signal>
+   <receiver>DataPage</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>609</x>
+     <y>56</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>371</x>
+     <y>117</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_data</sender>
+   <signal>clicked()</signal>
+   <receiver>DataPage</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>333</x>
+     <y>62</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>359</x>
+     <y>132</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_financial</sender>
+   <signal>clicked()</signal>
+   <receiver>DataPage</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1008</x>
+     <y>59</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>372</x>
+     <y>152</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_news</sender>
+   <signal>clicked()</signal>
+   <receiver>DataPage</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1462</x>
+     <y>61</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>372</x>
+     <y>150</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_data</sender>
+   <signal>clicked()</signal>
+   <receiver>GraphPage</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>271</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>428</x>
+     <y>271</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_graph</sender>
+   <signal>clicked()</signal>
+   <receiver>GraphPage</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>633</x>
+     <y>72</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>510</x>
+     <y>181</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_financial</sender>
+   <signal>clicked()</signal>
+   <receiver>GraphPage</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>997</x>
+     <y>70</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>994</x>
+     <y>130</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_news</sender>
+   <signal>clicked()</signal>
+   <receiver>GraphPage</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1522</x>
+     <y>56</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1525</x>
+     <y>134</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_news</sender>
+   <signal>clicked()</signal>
+   <receiver>NewsPage</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1644</x>
+     <y>58</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1631</x>
+     <y>289</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_financial</sender>
+   <signal>clicked()</signal>
+   <receiver>NewsPage</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1229</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1223</x>
+     <y>268</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_graph</sender>
+   <signal>clicked()</signal>
+   <receiver>NewsPage</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>777</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>794</x>
+     <y>297</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_data</sender>
+   <signal>clicked()</signal>
+   <receiver>NewsPage</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>271</x>
+     <y>54</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>194</x>
+     <y>173</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_data</sender>
+   <signal>clicked()</signal>
+   <receiver>FinancialPage</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>306</x>
+     <y>57</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>305</x>
+     <y>125</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_graph</sender>
+   <signal>clicked()</signal>
+   <receiver>FinancialPage</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>640</x>
+     <y>68</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>639</x>
+     <y>177</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_financial</sender>
+   <signal>clicked()</signal>
+   <receiver>FinancialPage</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1263</x>
+     <y>76</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1264</x>
+     <y>162</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_news</sender>
+   <signal>clicked()</signal>
+   <receiver>FinancialPage</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1463</x>
+     <y>59</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1475</x>
+     <y>157</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fncset</sender>
+   <signal>clicked()</signal>
+   <receiver>financeset</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>197</x>
+     <y>184</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>395</x>
+     <y>812</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fncnasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>financeset</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>231</x>
+     <y>262</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>453</x>
+     <y>814</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fncset</sender>
+   <signal>clicked()</signal>
+   <receiver>financenasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>329</x>
+     <y>181</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>392</x>
+     <y>756</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_fncnasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>financenasdaq</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>189</x>
+     <y>252</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>391</x>
+     <y>809</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_newsset</sender>
+   <signal>clicked()</signal>
+   <receiver>NewsSet</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>255</x>
+     <y>135</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>394</x>
+     <y>162</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_newsnasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>NewsSet</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>261</x>
+     <y>217</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>433</x>
+     <y>162</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_newscrypto</sender>
+   <signal>clicked()</signal>
+   <receiver>NewsSet</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>260</x>
+     <y>276</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>429</x>
+     <y>163</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_newsset</sender>
+   <signal>clicked()</signal>
+   <receiver>NewsNasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>250</x>
+     <y>132</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>390</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_newsnasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>NewsNasdaq</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>216</x>
+     <y>207</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>436</x>
+     <y>172</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_newscrypto</sender>
+   <signal>clicked()</signal>
+   <receiver>NewsNasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>275</x>
+     <y>268</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>465</x>
+     <y>171</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_newsset</sender>
+   <signal>clicked()</signal>
+   <receiver>NewsCrypto</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>326</x>
+     <y>136</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>397</x>
+     <y>162</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_newsnasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>NewsCrypto</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>213</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>393</x>
+     <y>184</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_newscrypto</sender>
+   <signal>clicked()</signal>
+   <receiver>NewsCrypto</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>156</x>
+     <y>280</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>394</x>
+     <y>183</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_graphset</sender>
+   <signal>clicked()</signal>
+   <receiver>Webview_set</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>133</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>428</x>
+     <y>143</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_graphnasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>Webview_set</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>213</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>427</x>
+     <y>159</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_graphcrypto</sender>
+   <signal>clicked()</signal>
+   <receiver>Webview_set</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>295</x>
+     <y>272</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>445</x>
+     <y>184</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_graphset</sender>
+   <signal>clicked()</signal>
+   <receiver>Webview_nasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>323</x>
+     <y>136</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>392</x>
+     <y>122</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_graphnasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>Webview_nasdaq</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>296</x>
+     <y>205</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>398</x>
+     <y>152</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_graphcrypto</sender>
+   <signal>clicked()</signal>
+   <receiver>Webview_nasdaq</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>249</x>
+     <y>283</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>395</x>
+     <y>170</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_graphset</sender>
+   <signal>clicked()</signal>
+   <receiver>Webview_crypto</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>273</x>
+     <y>140</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>371</x>
+     <y>337</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_graphnasdaq</sender>
+   <signal>clicked()</signal>
+   <receiver>Webview_crypto</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>270</x>
+     <y>209</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>371</x>
+     <y>331</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_graphcrypto</sender>
+   <signal>clicked()</signal>
+   <receiver>Webview_crypto</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>243</x>
+     <y>273</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>372</x>
+     <y>405</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

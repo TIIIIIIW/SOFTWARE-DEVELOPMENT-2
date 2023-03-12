@@ -834,3 +834,12 @@ class Ui_MainWindow(object):
         item = self.tableWidget_newscrypto.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Source"))
         self.pushButton_updatenewscrypto.setText(_translate("MainWindow", "Update"))
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())

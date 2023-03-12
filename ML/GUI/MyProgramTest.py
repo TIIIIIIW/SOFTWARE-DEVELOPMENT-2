@@ -338,3 +338,12 @@ class Ui_MainWindow(object):
         self.pushButton_infonasdaq.setText(_translate("MainWindow", "Information"))
         self.pushButton_loadnasdaq.setText(_translate("MainWindow", "Update"))
         self.pushButton_loadcrypto.setText(_translate("MainWindow", "Update"))
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())

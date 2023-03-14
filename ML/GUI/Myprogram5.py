@@ -6,7 +6,7 @@ from PyQt5.QtGui import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sqlite3
 
-###############################
+############################### Finish
 def combobox_value():
     conn = sqlite3.connect('newshare.sqlite')
     cursor = conn.cursor()
@@ -107,7 +107,7 @@ class Ui_MainWindow(object):
         self.comboBox_set100.setGeometry(QtCore.QRect(120, 150, 1341, 41))
         self.comboBox_set100.setObjectName("comboBox_set100")
 
-        ###############################
+        ############################### Finish
         self.comboBox_set100.setEditable(True)
         self.comboBox_set100.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
         self.comboBox_set100.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
@@ -193,7 +193,7 @@ class Ui_MainWindow(object):
         self.pushButton_infoset100.clicked.connect(self.tableWidget_infoset100.show) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        ###############################
+        ############################### Finish
         layout = QtWidgets.QVBoxLayout(MainWindow)
         TW = QtWidgets.QTabWidget(MainWindow)
 
@@ -221,7 +221,7 @@ class Ui_MainWindow(object):
         self.pushButton_dataset100.setText(_translate("MainWindow", "Data"))
         self.pushButton_infoset100.setText(_translate("MainWindow", "Information"))
 
-        ###############################
+        ############################### Finish
         item = self.tableWidget_set100.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Date"))
         self.tableWidget_set100.setColumnWidth(0, 130)
@@ -273,7 +273,7 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
 
-    ###############################
+    ############################### Finish
     ui.comboBox_set100.addItems(combobox_value())
     ###############################
 

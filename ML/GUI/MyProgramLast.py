@@ -1,7 +1,220 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-
+from PyQt5 import QtCore, QtGui, QtWidgets, QtWebEngineWidgets
+import sqlite3
 
 class Ui_MainWindow(object):
+#---------------------------------------------------------------- Load Data
+    def load_dataset_all(self):
+        conn = sqlite3.connect('share_V3.sqlite')
+        cursor = conn.cursor()
+        sqlquery = f"""SELECT i.Symbol,i.Sname,m.Mname,s.Full_Sector,ind.Full_Industry,i.Description FROM Information as i
+                        INNER JOIN Category as c ON c.SymbolId = i.SymbolId
+                        INNER JOIN Sector as s ON c.SectorId = s.SectorId
+                        INNER JOIN Industry as ind ON c.IndustryId = ind.IndustryId
+                        INNER JOIN Market as m ON m.MarketId = i.MarketId
+                        WHERE m.Mname = 'SET'
+                        ORDER BY i.Symbol ASC;"""
+        result = conn.execute(sqlquery)
+        self.tableWidget_dataset.setRowCount(0)
+        for row_num, row_data in enumerate(result):
+            self.tableWidget_dataset.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget_dataset.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
+    
+    def load_datanasdaq_all(self):
+        conn = sqlite3.connect('share_V3.sqlite')
+        cursor = conn.cursor()
+        sqlquery = f"""SELECT i.Symbol,i.Sname,m.Mname,s.Full_Sector,ind.Full_Industry FROM Information as i
+                        INNER JOIN Category as c ON c.SymbolId = i.SymbolId
+                        INNER JOIN Sector as s ON c.SectorId = s.SectorId
+                        INNER JOIN Industry as ind ON c.IndustryId = ind.IndustryId
+                        INNER JOIN Market as m ON m.MarketId = i.MarketId
+                        WHERE m.Mname = 'NASDAQ'
+                        ORDER BY i.Symbol ASC;"""
+        result = conn.execute(sqlquery)
+        self.tableWidget_datanasdaq.setRowCount(0)
+        for row_num, row_data in enumerate(result):
+            self.tableWidget_datanasdaq.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget_datanasdaq.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
+
+    def load_datacrypto_all(self):
+        conn = sqlite3.connect('share_V3.sqlite')
+        cursor = conn.cursor()
+        sqlquery = f"""SELECT i.Symbol,i.Sname,m.Mname FROM Information as i
+                        INNER JOIN Market as m ON m.MarketId = i.MarketId
+                        WHERE m.Mname = 'CRYPTO'
+                        ORDER BY i.Symbol ASC;"""
+        result = conn.execute(sqlquery)
+        self.tableWidget_datacrypto.setRowCount(0)
+        for row_num, row_data in enumerate(result):
+            self.tableWidget_datacrypto.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget_datacrypto.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
+    
+    def load_fncset_all(self):
+        conn = sqlite3.connect('share_V3.sqlite')
+        cursor = conn.cursor()
+        sqlquery = f"""SELECT fq.Asset,fq.TotalDebt,fq.Equity,fq.Revenue,fq.NetProfit,fq.ROA,fq.ROE,fq.Period,i.Symbol FROM Financial_quarterly as fq
+                        INNER JOIN Information as i ON fq.SymbolId = i.SymbolId
+                        WHERE i.MarketId = 1
+                        ORDER BY Symbol ASC;"""
+        result = conn.execute(sqlquery)
+        self.tableWidget_fncset.setRowCount(0)
+        for row_num, row_data in enumerate(result):
+            self.tableWidget_fncset.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget_fncset.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
+    
+    def load_fncnasdaq_all(self):
+        conn = sqlite3.connect('share_V3.sqlite')
+        cursor = conn.cursor()
+        sqlquery = f"""SELECT fq.Asset,fq.TotalDebt,fq.Equity,fq.Revenue,fq.NetProfit,fq.ROA,fq.ROE,fq.Period,i.Symbol FROM Financial_quarterly as fq
+                        INNER JOIN Information as i ON fq.SymbolId = i.SymbolId
+                        WHERE i.MarketId = 2
+                        ORDER BY Symbol ASC;"""
+        result = conn.execute(sqlquery)
+        self.tableWidget_fncnasdaq.setRowCount(0)
+        for row_num, row_data in enumerate(result):
+            self.tableWidget_fncnasdaq.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget_fncnasdaq.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
+
+    def load_dataset(self):
+        selected_item = self.comboBox_dataset.currentText()
+        conn = sqlite3.connect('share_V3.sqlite')
+        cursor = conn.cursor()
+        sqlquery = f"""SELECT i.Symbol,i.Sname,m.Mname,s.Full_Sector,ind.Full_Industry,i.Description FROM Information as i
+                        INNER JOIN Category as c ON c.SymbolId = i.SymbolId
+                        INNER JOIN Sector as s ON c.SectorId = s.SectorId
+                        INNER JOIN Industry as ind ON c.IndustryId = ind.IndustryId
+                        INNER JOIN Market as m ON m.MarketId = i.MarketId
+                        WHERE i.Symbol = '{str(selected_item)}';"""
+        result = conn.execute(sqlquery)
+        self.tableWidget_searchset.setRowCount(0)
+        for row_num, row_data in enumerate(result):
+            self.tableWidget_searchset.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget_searchset.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
+
+    def load_datanasdaq(self):
+        selected_item = self.comboBox_datanasdaq.currentText()
+        conn = sqlite3.connect('share_V3.sqlite')
+        cursor = conn.cursor()
+        sqlquery = f"""SELECT i.Symbol,i.Sname,m.Mname,s.Full_Sector,ind.Full_Industry FROM Information as i
+                        INNER JOIN Category as c ON c.SymbolId = i.SymbolId
+                        INNER JOIN Sector as s ON c.SectorId = s.SectorId
+                        INNER JOIN Industry as ind ON c.IndustryId = ind.IndustryId
+                        INNER JOIN Market as m ON m.MarketId = i.MarketId
+                        WHERE i.Symbol = '{str(selected_item)}';"""
+        result = conn.execute(sqlquery)
+        self.tableWidget_searchnasdaq.setRowCount(0)
+        for row_num, row_data in enumerate(result):
+            self.tableWidget_searchnasdaq.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget_searchnasdaq.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
+    
+    def load_datacrypto(self):
+        selected_item = self.comboBox_datacrypto.currentText()
+        conn = sqlite3.connect('share_V3.sqlite')
+        cursor = conn.cursor()
+        sqlquery = f"""SELECT i.Symbol,i.Sname,m.Mname FROM Information as i
+                        INNER JOIN Market as m ON m.MarketId = i.MarketId
+                        WHERE i.Symbol = '{str(selected_item)}';"""
+        result = conn.execute(sqlquery)
+        self.tableWidget_searchcrypto.setRowCount(0)
+        for row_num, row_data in enumerate(result):
+            self.tableWidget_searchcrypto.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget_searchcrypto.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
+    
+    def load_fncset(self):
+        selected_item = self.comboBox_fncset.currentText()
+        conn = sqlite3.connect('share_V3.sqlite')
+        cursor = conn.cursor()
+        sqlquery = f"""SELECT fq.Asset,fq.TotalDebt,fq.Equity,fq.Revenue,fq.NetProfit,fq.ROA,fq.ROE,fq.Period,i.Symbol FROM Financial_quarterly as fq
+                        INNER JOIN Information as i ON fq.SymbolId = i.SymbolId
+                        WHERE i.Symbol = '{str(selected_item)}'
+                        ORDER BY Period DESC;"""
+        result = conn.execute(sqlquery)
+        self.tableWidget_searchfncset.setRowCount(0)
+        for row_num, row_data in enumerate(result):
+            self.tableWidget_searchfncset.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget_searchfncset.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
+    
+    def load_fncnasdaq(self):
+        selected_item = self.comboBox_fncnasdaq.currentText()
+        conn = sqlite3.connect('share_V3.sqlite')
+        cursor = conn.cursor()
+        sqlquery = f"""SELECT fq.Asset,fq.TotalDebt,fq.Equity,fq.Revenue,fq.NetProfit,fq.ROA,fq.ROE,fq.Period,i.Symbol FROM Financial_quarterly as fq
+                        INNER JOIN Information as i ON fq.SymbolId = i.SymbolId
+                        WHERE i.Symbol = '{str(selected_item)}'
+                        ORDER BY Period DESC;"""
+        result = conn.execute(sqlquery)
+        self.tableWidget_searchfncnasdaq.setRowCount(0)
+        for row_num, row_data in enumerate(result):
+            self.tableWidget_searchfncnasdaq.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget_searchfncnasdaq.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
+    
+    def load_newsset(self):
+        selected_item = self.comboBox_newsset.currentText()
+        conn = sqlite3.connect('share_V3.sqlite')
+        cursor = conn.cursor()
+        sqlquery = f"""SELECT n.Date,n.Title,n.Description,n.Link,n.Source FROM News as n
+                        INNER JOIN Share_in_News as sn ON sn.NewsId = n.NewsId
+                        INNER JOIN Information as i ON i.SymbolId = sn.SymbolId
+                        WHERE i.Symbol = '{str(selected_item)}' """
+        result = conn.execute(sqlquery)
+        self.tableWidget_newsset.setRowCount(0)
+        for row_num, row_data in enumerate(result):
+            self.tableWidget_newsset.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget_newsset.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
+    
+    def load_newsnasdaq(self):
+        selected_item = self.comboBox_newsnasdaq.currentText()
+        conn = sqlite3.connect('share_V3.sqlite')
+        cursor = conn.cursor()
+        sqlquery = f"""SELECT n.Date,n.Title,n.Description,n.Link,n.Source FROM News as n
+                        INNER JOIN Share_in_News as sn ON sn.NewsId = n.NewsId
+                        INNER JOIN Information as i ON i.SymbolId = sn.SymbolId
+                        WHERE i.Symbol = '{str(selected_item)}' """
+        result = conn.execute(sqlquery)
+        self.tableWidget_newsnasdaq.setRowCount(0)
+        for row_num, row_data in enumerate(result):
+            self.tableWidget_newsnasdaq.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget_newsnasdaq.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
+    
+    def load_newscrypto(self):
+        selected_item = self.comboBox_newscrypto.currentText()
+        conn = sqlite3.connect('share_V3.sqlite')
+        cursor = conn.cursor()
+        sqlquery = f"""SELECT n.Date,n.Title,n.Description,n.Link,n.Source FROM News as n
+                        INNER JOIN Share_in_News as sn ON sn.NewsId = n.NewsId
+                        INNER JOIN Information as i ON i.SymbolId = sn.SymbolId
+                        WHERE i.Symbol = '{str(selected_item)}' """
+        result = conn.execute(sqlquery)
+        self.tableWidget_newscrypto.setRowCount(0)
+        for row_num, row_data in enumerate(result):
+            self.tableWidget_newscrypto.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget_newscrypto.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1820, 920)
@@ -103,11 +316,11 @@ class Ui_MainWindow(object):
         self.tablenasdaq.setStyleSheet("background-color: #D2D7DF;")
         self.tablenasdaq.setObjectName("tablenasdaq")
         self.tableWidget_datanasdaq = QtWidgets.QTableWidget(self.tablenasdaq)
-        self.tableWidget_datanasdaq.setGeometry(QtCore.QRect(0, 0, 1411, 651))
+        self.tableWidget_datanasdaq.setGeometry(QtCore.QRect(0, 0, 1411, 600))
         self.tableWidget_datanasdaq.setMaximumSize(QtCore.QSize(1411, 16777215))
         self.tableWidget_datanasdaq.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.tableWidget_datanasdaq.setObjectName("tableWidget_datanasdaq")
-        self.tableWidget_datanasdaq.setColumnCount(4)
+        self.tableWidget_datanasdaq.setColumnCount(5)
         self.tableWidget_datanasdaq.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_datanasdaq.setHorizontalHeaderItem(0, item)
@@ -117,14 +330,22 @@ class Ui_MainWindow(object):
         self.tableWidget_datanasdaq.setHorizontalHeaderItem(2, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_datanasdaq.setHorizontalHeaderItem(3, item)
-        self.tableWidget_datanasdaq.horizontalHeader().setDefaultSectionSize(350)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_datanasdaq.setHorizontalHeaderItem(4, item)
+        self.tableWidget_datanasdaq.horizontalHeader().setDefaultSectionSize(200)
         self.comboBox_datanasdaq = QtWidgets.QComboBox(self.tablenasdaq)
-        self.comboBox_datanasdaq.setGeometry(QtCore.QRect(0, 670, 1241, 31))
+        self.comboBox_datanasdaq.setGeometry(QtCore.QRect(0, 620, 1241, 31))
         self.comboBox_datanasdaq.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.comboBox_datanasdaq.setStyleSheet("background-color:#ffffff;")
         self.comboBox_datanasdaq.setObjectName("comboBox_datanasdaq")
+#----------------------------------------------------------------- Combobox Search Data Nasdaq
+        self.comboBox_datanasdaq.setEditable(True)
+        self.comboBox_datanasdaq.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
+        self.comboBox_datanasdaq.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
+        self.comboBox_datanasdaq.currentIndexChanged.connect(self.load_datanasdaq)
+
         self.tableWidget_searchnasdaq = QtWidgets.QTableWidget(self.tablenasdaq)
-        self.tableWidget_searchnasdaq.setGeometry(QtCore.QRect(0, 720, 1411, 71))
+        self.tableWidget_searchnasdaq.setGeometry(QtCore.QRect(0, 670, 1411, 121))
         self.tableWidget_searchnasdaq.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.tableWidget_searchnasdaq.setObjectName("tableWidget_searchnasdaq")
         self.tableWidget_searchnasdaq.setColumnCount(5)
@@ -139,9 +360,9 @@ class Ui_MainWindow(object):
         self.tableWidget_searchnasdaq.setHorizontalHeaderItem(3, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_searchnasdaq.setHorizontalHeaderItem(4, item)
-        self.tableWidget_searchnasdaq.horizontalHeader().setDefaultSectionSize(350)
+        self.tableWidget_searchnasdaq.horizontalHeader().setDefaultSectionSize(200)
         self.pushButton_updatenasdaq = QtWidgets.QPushButton(self.tablenasdaq)
-        self.pushButton_updatenasdaq.setGeometry(QtCore.QRect(1260, 670, 141, 31))
+        self.pushButton_updatenasdaq.setGeometry(QtCore.QRect(1260, 620, 141, 31))
         self.pushButton_updatenasdaq.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.pushButton_updatenasdaq.setStyleSheet("background-color: rgb(225, 255, 228);")
         self.pushButton_updatenasdaq.setObjectName("pushButton_updatenasdaq")
@@ -150,11 +371,11 @@ class Ui_MainWindow(object):
         self.tableset.setStyleSheet("background-color: #D2D7DF;")
         self.tableset.setObjectName("tableset")
         self.tableWidget_dataset = QtWidgets.QTableWidget(self.tableset)
-        self.tableWidget_dataset.setGeometry(QtCore.QRect(0, 0, 1411, 651))
+        self.tableWidget_dataset.setGeometry(QtCore.QRect(0, 0, 1411, 600))
         self.tableWidget_dataset.setMaximumSize(QtCore.QSize(1411, 16777215))
         self.tableWidget_dataset.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.tableWidget_dataset.setObjectName("tableWidget_dataset")
-        self.tableWidget_dataset.setColumnCount(5)
+        self.tableWidget_dataset.setColumnCount(6)
         self.tableWidget_dataset.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_dataset.setHorizontalHeaderItem(0, item)
@@ -166,17 +387,28 @@ class Ui_MainWindow(object):
         self.tableWidget_dataset.setHorizontalHeaderItem(3, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_dataset.setHorizontalHeaderItem(4, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_dataset.setHorizontalHeaderItem(5, item)
         self.tableWidget_dataset.horizontalHeader().setDefaultSectionSize(150)
+#-------------------------------------------------------------------- Load All Data SET
+        self.load_dataset_all()
+
         self.comboBox_dataset = QtWidgets.QComboBox(self.tableset)
-        self.comboBox_dataset.setGeometry(QtCore.QRect(0, 670, 1241, 31))
+        self.comboBox_dataset.setGeometry(QtCore.QRect(0, 620, 1241, 31))
         self.comboBox_dataset.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.comboBox_dataset.setStyleSheet("background-color:#ffffff;")
         self.comboBox_dataset.setObjectName("comboBox_dataset")
+#----------------------------------------------------------------- Combobox Search Data Set
+        self.comboBox_dataset.setEditable(True)
+        self.comboBox_dataset.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
+        self.comboBox_dataset.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
+        self.comboBox_dataset.currentIndexChanged.connect(self.load_dataset)
+
         self.tableWidget_searchset = QtWidgets.QTableWidget(self.tableset)
-        self.tableWidget_searchset.setGeometry(QtCore.QRect(0, 720, 1411, 71))
+        self.tableWidget_searchset.setGeometry(QtCore.QRect(0, 670, 1411, 121))
         self.tableWidget_searchset.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.tableWidget_searchset.setObjectName("tableWidget_searchset")
-        self.tableWidget_searchset.setColumnCount(5)
+        self.tableWidget_searchset.setColumnCount(6)
         self.tableWidget_searchset.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_searchset.setHorizontalHeaderItem(0, item)
@@ -188,9 +420,11 @@ class Ui_MainWindow(object):
         self.tableWidget_searchset.setHorizontalHeaderItem(3, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_searchset.setHorizontalHeaderItem(4, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_searchset.setHorizontalHeaderItem(5, item)
         self.tableWidget_searchset.horizontalHeader().setDefaultSectionSize(150)
         self.pushButton_updateset = QtWidgets.QPushButton(self.tableset)
-        self.pushButton_updateset.setGeometry(QtCore.QRect(1260, 670, 141, 31))
+        self.pushButton_updateset.setGeometry(QtCore.QRect(1260, 620, 141, 31))
         self.pushButton_updateset.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.pushButton_updateset.setStyleSheet("background-color: rgb(225, 255, 228);")
         self.pushButton_updateset.setObjectName("pushButton_updateset")
@@ -203,29 +437,39 @@ class Ui_MainWindow(object):
         self.tableWidget_datacrypto.setMaximumSize(QtCore.QSize(1411, 16777215))
         self.tableWidget_datacrypto.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.tableWidget_datacrypto.setObjectName("tableWidget_datacrypto")
-        self.tableWidget_datacrypto.setColumnCount(2)
+        self.tableWidget_datacrypto.setColumnCount(3)
         self.tableWidget_datacrypto.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_datacrypto.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_datacrypto.setHorizontalHeaderItem(1, item)
-        self.tableWidget_datacrypto.horizontalHeader().setDefaultSectionSize(300)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_datacrypto.setHorizontalHeaderItem(2, item)
+        self.tableWidget_datacrypto.horizontalHeader().setDefaultSectionSize(200)
         self.comboBox_datacrypto = QtWidgets.QComboBox(self.tablecrypto)
         self.comboBox_datacrypto.setGeometry(QtCore.QRect(650, 20, 731, 31))
         self.comboBox_datacrypto.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.comboBox_datacrypto.setStyleSheet("background-color:#ffffff;")
         self.comboBox_datacrypto.setObjectName("comboBox_datacrypto")
+#----------------------------------------------------------------- Combobox Search Data Crypto
+        self.comboBox_datacrypto.setEditable(True)
+        self.comboBox_datacrypto.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
+        self.comboBox_datacrypto.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
+        self.comboBox_datacrypto.currentIndexChanged.connect(self.load_datacrypto)
+
         self.tableWidget_searchcrypto = QtWidgets.QTableWidget(self.tablecrypto)
         self.tableWidget_searchcrypto.setGeometry(QtCore.QRect(700, 80, 611, 71))
         self.tableWidget_searchcrypto.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.tableWidget_searchcrypto.setObjectName("tableWidget_searchcrypto")
-        self.tableWidget_searchcrypto.setColumnCount(2)
+        self.tableWidget_searchcrypto.setColumnCount(3)
         self.tableWidget_searchcrypto.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_searchcrypto.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_searchcrypto.setHorizontalHeaderItem(1, item)
-        self.tableWidget_searchcrypto.horizontalHeader().setDefaultSectionSize(300)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_searchcrypto.setHorizontalHeaderItem(2, item)
+        self.tableWidget_searchcrypto.horizontalHeader().setDefaultSectionSize(200)
         self.pushButton_updatecrypto = QtWidgets.QPushButton(self.tablecrypto)
         self.pushButton_updatecrypto.setGeometry(QtCore.QRect(1170, 180, 141, 31))
         self.pushButton_updatecrypto.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
@@ -278,16 +522,40 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.pushButton_graphcrypto)
         self.Webview_set = QtWidgets.QWidget(self.GraphPage)
         self.Webview_set.setGeometry(QtCore.QRect(350, 0, 1411, 791))
-        self.Webview_set.setStyleSheet("background-color: rgb(170, 255, 255);")
+        self.Webview_set.setStyleSheet("background-color: #D2D7DF;")
         self.Webview_set.setObjectName("Webview_set")
+#------------------------------------------------------------------------- WebEngine_SET
+        self.WebEngine_set = QtWebEngineWidgets.QWebEngineView(self.Webview_set)
+        self.WebEngine_set.setGeometry(QtCore.QRect(0, 0, 1411, 791))
+        self.WebEngine_set.setMaximumSize(QtCore.QSize(1411, 16777215))
+        self.WebEngine_set.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.WebEngine_set.setObjectName("WebEngine_set")
+        self.WebEngine_set.load(QtCore.QUrl("http://127.0.0.1:1000/"))
+
         self.Webview_nasdaq = QtWidgets.QWidget(self.GraphPage)
         self.Webview_nasdaq.setGeometry(QtCore.QRect(350, 0, 1411, 791))
-        self.Webview_nasdaq.setStyleSheet("background-color: rgb(255, 255, 0);")
+        self.Webview_nasdaq.setStyleSheet("background-color: #D2D7DF;")
         self.Webview_nasdaq.setObjectName("Webview_nasdaq")
+#------------------------------------------------------------------------- WebEngine_NASDAQ
+        self.WebEngine_nasdaq = QtWebEngineWidgets.QWebEngineView(self.Webview_nasdaq)
+        self.WebEngine_nasdaq.setGeometry(QtCore.QRect(0, 0, 1411, 791))
+        self.WebEngine_nasdaq.setMaximumSize(QtCore.QSize(1411, 16777215))
+        self.WebEngine_nasdaq.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.WebEngine_nasdaq.setObjectName("WebEngine_nasdaq")
+        self.WebEngine_nasdaq.load(QtCore.QUrl("http://127.0.0.1:2000/"))
+
         self.Webview_crypto = QtWidgets.QWidget(self.GraphPage)
         self.Webview_crypto.setGeometry(QtCore.QRect(350, 0, 1411, 791))
-        self.Webview_crypto.setStyleSheet("background-color: rgb(170, 255, 127);")
+        self.Webview_crypto.setStyleSheet("background-color: #D2D7DF;")
         self.Webview_crypto.setObjectName("Webview_crypto")
+#------------------------------------------------------------------------- WebEngine_Crypto
+        self.WebEngine_crypto = QtWebEngineWidgets.QWebEngineView(self.Webview_crypto)
+        self.WebEngine_crypto.setGeometry(QtCore.QRect(0, 0, 1411, 791))
+        self.WebEngine_crypto.setMaximumSize(QtCore.QSize(1411, 16777215))
+        self.WebEngine_crypto.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.WebEngine_crypto.setObjectName("WebEngine_crypto")
+        self.WebEngine_crypto.load(QtCore.QUrl("http://127.0.0.1:3000/"))
+
         self.Graph_select.raise_()
         self.Webview_nasdaq.raise_()
         self.Webview_crypto.raise_()
@@ -333,6 +601,12 @@ class Ui_MainWindow(object):
         self.comboBox_fncset.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.comboBox_fncset.setStyleSheet("background-color:#ffffff;")
         self.comboBox_fncset.setObjectName("comboBox_fncset")
+#----------------------------------------------------------------- Combobox Search Fnc Set
+        self.comboBox_fncset.setEditable(True)
+        self.comboBox_fncset.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
+        self.comboBox_fncset.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
+        self.comboBox_fncset.currentIndexChanged.connect(self.load_fncset)
+
         self.tableWidget_fncset = QtWidgets.QTableWidget(self.financeset)
         self.tableWidget_fncset.setGeometry(QtCore.QRect(0, 0, 1411, 501))
         self.tableWidget_fncset.setMaximumSize(QtCore.QSize(1411, 16777215))
@@ -359,6 +633,9 @@ class Ui_MainWindow(object):
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_fncset.setHorizontalHeaderItem(8, item)
         self.tableWidget_fncset.horizontalHeader().setDefaultSectionSize(156)
+#-------------------------------------------------------------------- Load All Fnc SET
+        self.load_fncset_all()
+
         self.pushButton_updatefncset = QtWidgets.QPushButton(self.financeset)
         self.pushButton_updatefncset.setGeometry(QtCore.QRect(1260, 520, 141, 31))
         self.pushButton_updatefncset.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
@@ -402,6 +679,12 @@ class Ui_MainWindow(object):
         self.comboBox_fncnasdaq.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.comboBox_fncnasdaq.setStyleSheet("background-color:#ffffff;")
         self.comboBox_fncnasdaq.setObjectName("comboBox_fncnasdaq")
+#----------------------------------------------------------------- Combobox Search Fnc Nasdaq
+        self.comboBox_fncnasdaq.setEditable(True)
+        self.comboBox_fncnasdaq.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
+        self.comboBox_fncnasdaq.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
+        self.comboBox_fncnasdaq.currentIndexChanged.connect(self.load_fncnasdaq)
+
         self.tableWidget_fncnasdaq = QtWidgets.QTableWidget(self.financenasdaq)
         self.tableWidget_fncnasdaq.setGeometry(QtCore.QRect(0, 0, 1411, 501))
         self.tableWidget_fncnasdaq.setMaximumSize(QtCore.QSize(1411, 16777215))
@@ -428,6 +711,9 @@ class Ui_MainWindow(object):
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_fncnasdaq.setHorizontalHeaderItem(8, item)
         self.tableWidget_fncnasdaq.horizontalHeader().setDefaultSectionSize(156)
+#-------------------------------------------------------------------- Load All Fnc NASDAQ
+        self.load_fncnasdaq_all()
+
         self.pushButton_updatefncnasdaq = QtWidgets.QPushButton(self.financenasdaq)
         self.pushButton_updatefncnasdaq.setGeometry(QtCore.QRect(1260, 520, 141, 31))
         self.pushButton_updatefncnasdaq.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
@@ -527,6 +813,12 @@ class Ui_MainWindow(object):
         self.comboBox_newsset.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.comboBox_newsset.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.comboBox_newsset.setObjectName("comboBox_newsset")
+#----------------------------------------------------------------- Combobox Search News Set
+        self.comboBox_newsset.setEditable(True)
+        self.comboBox_newsset.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
+        self.comboBox_newsset.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
+        self.comboBox_newsset.currentIndexChanged.connect(self.load_newsset)
+
         self.pushButton_updatenewsset = QtWidgets.QPushButton(self.NewsSet)
         self.pushButton_updatenewsset.setGeometry(QtCore.QRect(1260, 20, 141, 31))
         self.pushButton_updatenewsset.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
@@ -557,6 +849,12 @@ class Ui_MainWindow(object):
         self.comboBox_newsnasdaq.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.comboBox_newsnasdaq.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.comboBox_newsnasdaq.setObjectName("comboBox_newsnasdaq")
+#----------------------------------------------------------------- Combobox Search News Nasdaq
+        self.comboBox_newsnasdaq.setEditable(True)
+        self.comboBox_newsnasdaq.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
+        self.comboBox_newsnasdaq.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
+        self.comboBox_newsnasdaq.currentIndexChanged.connect(self.load_newsnasdaq)
+
         self.pushButton_updatenewsnasdaq = QtWidgets.QPushButton(self.NewsNasdaq)
         self.pushButton_updatenewsnasdaq.setGeometry(QtCore.QRect(1260, 20, 141, 31))
         self.pushButton_updatenewsnasdaq.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
@@ -587,6 +885,12 @@ class Ui_MainWindow(object):
         self.comboBox_newscrypto.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.comboBox_newscrypto.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.comboBox_newscrypto.setObjectName("comboBox_newscrypto")
+#----------------------------------------------------------------- Combobox Search News Crypto
+        self.comboBox_newscrypto.setEditable(True)
+        self.comboBox_newscrypto.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
+        self.comboBox_newscrypto.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
+        self.comboBox_newscrypto.currentIndexChanged.connect(self.load_newscrypto)
+
         self.pushButton_updatenewscrypto = QtWidgets.QPushButton(self.NewsCrypto)
         self.pushButton_updatenewscrypto.setGeometry(QtCore.QRect(1260, 20, 141, 31))
         self.pushButton_updatenewscrypto.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
@@ -678,6 +982,14 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Market"))
         item = self.tableWidget_datanasdaq.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Sector"))
+        item = self.tableWidget_datanasdaq.horizontalHeaderItem(4)
+        item.setText(_translate("MainWindow", "Industry"))
+#------------------------------------------------------------------ Column Width Datanasdaq
+        self.tableWidget_datanasdaq.setColumnWidth(1, 350)
+        self.tableWidget_datanasdaq.setColumnWidth(4, 450)
+#-------------------------------------------------------------------- Load All Data NASDAQ
+        self.load_datanasdaq_all()
+
         item = self.tableWidget_searchnasdaq.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Symbol"))
         item = self.tableWidget_searchnasdaq.horizontalHeaderItem(1)
@@ -687,7 +999,11 @@ class Ui_MainWindow(object):
         item = self.tableWidget_searchnasdaq.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Sector"))
         item = self.tableWidget_searchnasdaq.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Destination"))
+        item.setText(_translate("MainWindow", "Industry"))
+#------------------------------------------------------------------ Column Width Data Search nasdaq
+        self.tableWidget_searchnasdaq.setColumnWidth(1, 350)
+        self.tableWidget_searchnasdaq.setColumnWidth(4, 450)
+
         self.pushButton_updatenasdaq.setText(_translate("MainWindow", "Update"))
         item = self.tableWidget_dataset.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Symbol"))
@@ -698,7 +1014,14 @@ class Ui_MainWindow(object):
         item = self.tableWidget_dataset.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Sector"))
         item = self.tableWidget_dataset.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Destination"))
+        item.setText(_translate("MainWindow", "Industry"))
+        item = self.tableWidget_dataset.horizontalHeaderItem(5)
+        item.setText(_translate("MainWindow", "Description"))
+#------------------------------------------------------------------ Column Width Data set
+        self.tableWidget_dataset.setColumnWidth(1, 250)
+        self.tableWidget_dataset.setColumnWidth(4, 250)
+        self.tableWidget_dataset.setColumnWidth(5, 450)
+
         item = self.tableWidget_searchset.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Symbol"))
         item = self.tableWidget_searchset.horizontalHeaderItem(1)
@@ -708,16 +1031,30 @@ class Ui_MainWindow(object):
         item = self.tableWidget_searchset.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Sector"))
         item = self.tableWidget_searchset.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "Destination"))
+        item.setText(_translate("MainWindow", "Industry"))
+        item = self.tableWidget_searchset.horizontalHeaderItem(5)
+        item.setText(_translate("MainWindow", "Description"))
+#------------------------------------------------------------------ Column Width Datasearch set
+        self.tableWidget_searchset.setColumnWidth(1, 250)
+        self.tableWidget_searchset.setColumnWidth(4, 250)
+        self.tableWidget_searchset.setColumnWidth(5, 450)
+
         self.pushButton_updateset.setText(_translate("MainWindow", "Update"))
         item = self.tableWidget_datacrypto.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Symbol"))
         item = self.tableWidget_datacrypto.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Name"))
+        item = self.tableWidget_datacrypto.horizontalHeaderItem(2)
+        item.setText(_translate("MainWindow", "Market"))
+#-------------------------------------------------------------------- Load All Data CRYPTO
+        self.load_datacrypto_all()
+
         item = self.tableWidget_searchcrypto.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Symbol"))
         item = self.tableWidget_searchcrypto.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Name"))
+        item = self.tableWidget_searchcrypto.horizontalHeaderItem(2)
+        item.setText(_translate("MainWindow", "Market"))
         self.pushButton_updatecrypto.setText(_translate("MainWindow", "Update"))
         self.pushButton_graphset.setText(_translate("MainWindow", "SET"))
         self.pushButton_graphnasdaq.setText(_translate("MainWindow", "NASDAQ"))
@@ -811,6 +1148,13 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Link"))
         item = self.tableWidget_newsset.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Source"))
+#------------------------------------------------------------------ Column Width News Set
+        self.tableWidget_newsset.setColumnWidth(0, 150)
+        self.tableWidget_newsset.setColumnWidth(1, 500)
+        self.tableWidget_newsset.setColumnWidth(2, 500)
+        self.tableWidget_newsset.setColumnWidth(3, 200)
+        self.tableWidget_newsset.setColumnWidth(4, 200)
+
         self.pushButton_updatenewsset.setText(_translate("MainWindow", "Update"))
         item = self.tableWidget_newsnasdaq.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Date"))
@@ -822,6 +1166,13 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Link"))
         item = self.tableWidget_newsnasdaq.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Source"))
+#------------------------------------------------------------------ Column Width News Nasdaq
+        self.tableWidget_newsnasdaq.setColumnWidth(0, 150)
+        self.tableWidget_newsnasdaq.setColumnWidth(1, 500)
+        self.tableWidget_newsnasdaq.setColumnWidth(2, 500)
+        self.tableWidget_newsnasdaq.setColumnWidth(3, 200)
+        self.tableWidget_newsnasdaq.setColumnWidth(4, 200)
+
         self.pushButton_updatenewsnasdaq.setText(_translate("MainWindow", "Update"))
         item = self.tableWidget_newscrypto.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Date"))
@@ -833,7 +1184,37 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Link"))
         item = self.tableWidget_newscrypto.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Source"))
+#------------------------------------------------------------------ Column Width News Crypto
+        self.tableWidget_newscrypto.setColumnWidth(0, 150)
+        self.tableWidget_newscrypto.setColumnWidth(1, 500)
+        self.tableWidget_newscrypto.setColumnWidth(2, 500)
+        self.tableWidget_newscrypto.setColumnWidth(3, 200)
+        self.tableWidget_newscrypto.setColumnWidth(4, 200)
+
         self.pushButton_updatenewscrypto.setText(_translate("MainWindow", "Update"))
+
+#------------------------------------------------------ Name of Stock and Crypto
+def combobox_SET():
+    conn = sqlite3.connect('share_V3.sqlite')
+    cursor = conn.cursor()
+    cursor.execute("""SELECT Symbol FROM Information WHERE MarketId = 1 ORDER BY Symbol ASC""")
+    result = cursor.fetchall()
+    values = [item[0] for item in result]
+    return values
+def combobox_NASDAQ():
+    conn = sqlite3.connect('share_V3.sqlite')
+    cursor = conn.cursor()
+    cursor.execute("""SELECT Symbol FROM Information WHERE MarketId = 2 ORDER BY Symbol ASC""")
+    result = cursor.fetchall()
+    values = [item[0] for item in result]
+    return values
+def combobox_CRYPTO():
+    conn = sqlite3.connect('share_V3.sqlite')
+    cursor = conn.cursor()
+    cursor.execute("""SELECT Symbol FROM Information WHERE MarketId = 3 ORDER BY Symbol ASC""")
+    result = cursor.fetchall()
+    values = [item[0] for item in result]
+    return values
 
 if __name__ == "__main__":
     import sys
@@ -841,5 +1222,14 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
+#------------------------------------------------------- Set Value Combobox
+    ui.comboBox_dataset.addItems(combobox_SET())
+    ui.comboBox_fncset.addItems(combobox_SET())
+    ui.comboBox_newsset.addItems(combobox_SET())
+    ui.comboBox_datanasdaq.addItems(combobox_NASDAQ())
+    ui.comboBox_fncnasdaq.addItems(combobox_NASDAQ())
+    ui.comboBox_newsnasdaq.addItems(combobox_NASDAQ())
+    ui.comboBox_datacrypto.addItems(combobox_CRYPTO())
+    ui.comboBox_newscrypto.addItems(combobox_CRYPTO())
     MainWindow.show()
     sys.exit(app.exec_())

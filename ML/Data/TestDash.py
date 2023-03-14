@@ -40,11 +40,11 @@ dropdown_options = [{'label': 'Hour', 'value': '1H'},
 
 # Define app layout
 app.layout = html.Div(children=[
-    html.Label('Select timeframe:'),
-    dcc.Dropdown(id='timeframe-dropdown', options=dropdown_options, value='1H', clearable=False),
-    dcc.Graph(id='graph', figure=fig),
-    html.Br(),
-])
+                            html.Label('Select timeframe:'),
+                            dcc.Dropdown(id='timeframe-dropdown', options=dropdown_options, value='1H', clearable=False),
+                            dcc.Graph(id='graph', figure=fig),
+                            html.Br(),
+                        ])
 
 # Define callback to update chart based on dropdown selection
 @app.callback(Output('graph', 'figure'),
@@ -79,4 +79,4 @@ def update_chart(timeframe):
 
 # Run app
 if __name__ == '__main__':
-    app.run_server(debug=True, port=8000)
+    app.run_server(debug=True, port=5000)

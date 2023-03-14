@@ -282,7 +282,7 @@
          <x>0</x>
          <y>0</y>
          <width>1411</width>
-         <height>651</height>
+         <height>600</height>
         </rect>
        </property>
        <property name="maximumSize">
@@ -295,7 +295,7 @@
         <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
        <attribute name="horizontalHeaderDefaultSectionSize">
-        <number>350</number>
+        <number>200</number>
        </attribute>
        <column>
         <property name="text">
@@ -317,12 +317,17 @@
          <string>Sector</string>
         </property>
        </column>
+       <column>
+        <property name="text">
+         <string>Industry</string>
+        </property>
+       </column>
       </widget>
       <widget class="QComboBox" name="comboBox_datanasdaq">
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>670</y>
+         <y>620</y>
          <width>1241</width>
          <height>31</height>
         </rect>
@@ -338,16 +343,16 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>720</y>
+         <y>670</y>
          <width>1411</width>
-         <height>71</height>
+         <height>121</height>
         </rect>
        </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
        <attribute name="horizontalHeaderDefaultSectionSize">
-        <number>350</number>
+        <number>200</number>
        </attribute>
        <column>
         <property name="text">
@@ -371,7 +376,7 @@
        </column>
        <column>
         <property name="text">
-         <string>Destination</string>
+         <string>Industry</string>
         </property>
        </column>
       </widget>
@@ -379,7 +384,7 @@
        <property name="geometry">
         <rect>
          <x>1260</x>
-         <y>670</y>
+         <y>620</y>
          <width>141</width>
          <height>31</height>
         </rect>
@@ -413,7 +418,7 @@
          <x>0</x>
          <y>0</y>
          <width>1411</width>
-         <height>651</height>
+         <height>600</height>
         </rect>
        </property>
        <property name="maximumSize">
@@ -450,7 +455,12 @@
        </column>
        <column>
         <property name="text">
-         <string>Destination</string>
+         <string>Industry</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Description</string>
         </property>
        </column>
       </widget>
@@ -458,7 +468,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>670</y>
+         <y>620</y>
          <width>1241</width>
          <height>31</height>
         </rect>
@@ -474,9 +484,9 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>720</y>
+         <y>670</y>
          <width>1411</width>
-         <height>71</height>
+         <height>121</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -507,7 +517,12 @@
        </column>
        <column>
         <property name="text">
-         <string>Destination</string>
+         <string>Industry</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Description</string>
         </property>
        </column>
       </widget>
@@ -515,7 +530,7 @@
        <property name="geometry">
         <rect>
          <x>1260</x>
-         <y>670</y>
+         <y>620</y>
          <width>141</width>
          <height>31</height>
         </rect>
@@ -562,7 +577,7 @@
         <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
        <attribute name="horizontalHeaderDefaultSectionSize">
-        <number>300</number>
+        <number>200</number>
        </attribute>
        <column>
         <property name="text">
@@ -572,6 +587,11 @@
        <column>
         <property name="text">
          <string>Name</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Market</string>
         </property>
        </column>
       </widget>
@@ -604,7 +624,7 @@
         <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
        <attribute name="horizontalHeaderDefaultSectionSize">
-        <number>300</number>
+        <number>200</number>
        </attribute>
        <column>
         <property name="text">
@@ -614,6 +634,11 @@
        <column>
         <property name="text">
          <string>Name</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Market</string>
         </property>
        </column>
       </widget>

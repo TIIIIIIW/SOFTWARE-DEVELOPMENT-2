@@ -20,7 +20,7 @@ df_hour = pd.read_sql("""SELECT sph."Datetime", sph.Open, sph.High, sph.Low, sph
 def get_stock_names():
     query = """SELECT DISTINCT i.Symbol FROM Stock_price_day as spd
                 INNER JOIN Information as i on i.SymbolId = spd.SymbolId
-                WHERE i.MarketId = 1
+                WHERE i.MarketId = 2
                 ORDER BY i.Symbol ASC;"""
     cursor = conn.execute(query)
     stock_names = [row[0] for row in cursor.fetchall()]
@@ -37,10 +37,10 @@ app.layout = html.Div([
                     html.Label('Choose a stock:'),
                     dcc.Dropdown(id='stock_dropdown',
                                 options=[{'label': stock, 'value': stock} for stock in get_stock_names()],
-                                value=get_stock_names()[0]),
+                                value=get_stock_names()[0], clearable=False),
                     dcc.Dropdown(id='timeframe-dropdown',
                                 options=timeframe_options, value='1H', clearable=False),
-                        ], style={'width': '30%', 'display': 'inline-block'}),
+                        ], style={'width': '100%', 'display': 'inline-block'}),
                 dcc.Graph(id='candles')
             ])
 
@@ -55,22 +55,21 @@ def update_candlestick_chart(value,timeframe):
     elif timeframe == '1D':
         df_plot = df_day[(df_day['Symbol'] == value)].tail(100)
         df_plot['Date'] = pd.to_datetime(df_plot['Date'])
-        # df_plot['Date'] = df_plot['Date'].dt.strftime("%Y.%m.%d")
         df_date = df_plot['Date']
     elif timeframe == '1W':
-        df_plot = df_day[(df_day['Symbol'] == value)].tail(1000)
+        df_plot = df_day[(df_day['Symbol'] == value)].tail(500)
         df_plot['Date'] = pd.to_datetime(df_plot['Date'])
         df_plot.set_index('Date', inplace=True)
         df_plot = df_plot.resample('W').agg(agg_dict)
         df_date = df_plot.index
     elif timeframe == '1M':
-        df_plot = df_day[(df_day['Symbol'] == value)]
+        df_plot = df_day[(df_day['Symbol'] == value)].tail(1000)
         df_plot['Date'] = pd.to_datetime(df_plot['Date'])
         df_plot.set_index('Date', inplace=True)
         df_plot = df_plot.resample('M').agg(agg_dict)
         df_date = df_plot.index
     elif timeframe == '3M':
-        df_plot = df_day[(df_day['Symbol'] == value)]
+        df_plot = df_day[(df_day['Symbol'] == value)].tail(3000)
         df_plot['Date'] = pd.to_datetime(df_plot['Date'])
         df_plot.set_index('Date', inplace=True)
         df_plot = df_plot.resample('3M').agg(agg_dict)
@@ -89,7 +88,7 @@ def update_candlestick_chart(value,timeframe):
     if timeframe == '1H':
         my_range = pd.date_range(start= min(df_plot['Datetime']), end= max(df_plot['Datetime']), freq='H')
         missing_datetime = my_range.difference(df_plot['Datetime']).strftime("%Y-%m-%d H%:m%:s%").tolist()
-        candles.update_xaxes(rangebreaks=[dict(bounds=[17, 10], pattern="hour"),dict(values=missing_datetime, dvalue=3600000)])
+        candles.update_xaxes(rangebreaks=[dict(values=missing_datetime, dvalue=3600000)])
     elif timeframe == '1D':
         my_range = pd.date_range(start= min(df_plot['Date']), end= max(df_plot['Date']), freq='D')
         missing_date = my_range.difference(df_plot['Date']).strftime("%Y-%m-%d").tolist()
@@ -102,4 +101,4 @@ def update_candlestick_chart(value,timeframe):
     return candles
 
 if __name__ == '__main__':
-    app.run_server(debug=True, port=1000)
+    app.run_server(debug=True, port=2000)

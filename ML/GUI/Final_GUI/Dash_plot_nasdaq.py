@@ -17,6 +17,11 @@ df_hour = pd.read_sql("""SELECT sph."Datetime", sph.Open, sph.High, sph.Low, sph
                      ON i.SymbolId = sph.SymbolId;"""
                      ,conn)
 
+df_roaroe = pd.read_sql("""SELECT fq.ROA,fq.ROE,fq.Period,i.Symbol FROM Financial_quarterly as fq
+                            INNER JOIN Information as i ON i.SymbolId = fq.SymbolId
+                            ORDER BY i.Symbol ASC;"""
+                     ,conn)
+
 def get_stock_names():
     query = """SELECT DISTINCT i.Symbol FROM Stock_price_day as spd
                 INNER JOIN Information as i on i.SymbolId = spd.SymbolId
@@ -75,15 +80,25 @@ def update_candlestick_chart(value,timeframe):
         df_plot = df_plot.resample('3M').agg(agg_dict)
         df_date = df_plot.index
 
-    candles = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.1
-                            , subplot_titles=('Candlestick', 'Volume'), row_width=[0.5, 1])
+    df_plot['MA5'] = df_plot['Close'].rolling(5).mean()
+    df_plot['MA25'] = df_plot['Close'].rolling(25).mean()
+
+    candles = make_subplots(rows=3, cols=1, shared_xaxes=True, vertical_spacing=0.1
+                            , subplot_titles=('Candlestick', 'Volume'), row_width=[1, 1, 1])
     candles.add_trace(go.Candlestick(x=df_date,
                                          open=df_plot['Open'],
                                          high=df_plot['High'],
                                          low=df_plot['Low'],
                                          close=df_plot['Close']), row=1, col=1)
+    
+    candles.add_trace(go.Scatter(x=df_date, y=df_plot['MA5'], line=dict(color='orange')), row=1, col=1)
+    candles.add_trace(go.Scatter(x=df_date, y=df_plot['MA25'] , line=dict(color='green')), row=1, col=1)
 
     candles.add_trace(go.Bar(x=df_date,y=df_plot['Volume'],), row=2, col=1)
+
+    data_roaroe = df_roaroe[(df_roaroe['Symbol'] == value)].drop(columns=['Symbol'])
+    candles.add_trace(go.Scatter(x=data_roaroe['Period'], y=data_roaroe['ROA'] , line=dict(color='red')), row=3, col=1)
+    candles.add_trace(go.Scatter(x=data_roaroe['Period'], y=data_roaroe['ROE'] , line=dict(color='blue')), row=3, col=1)
 
     if timeframe == '1H':
         my_range = pd.date_range(start= min(df_plot['Datetime']), end= max(df_plot['Datetime']), freq='H')
@@ -93,11 +108,9 @@ def update_candlestick_chart(value,timeframe):
         my_range = pd.date_range(start= min(df_plot['Date']), end= max(df_plot['Date']), freq='D')
         missing_date = my_range.difference(df_plot['Date']).strftime("%Y-%m-%d").tolist()
         candles.update_xaxes(rangebreaks=[dict(bounds=["sat", "mon"]), dict(values=missing_date)])
-    else:
-        pass
 
     candles.update(layout_xaxis_rangeslider_visible=False)
-    candles.update_xaxes(showticklabels=False)
+    candles['layout'].update(height=750)
     return candles
 
 if __name__ == '__main__':

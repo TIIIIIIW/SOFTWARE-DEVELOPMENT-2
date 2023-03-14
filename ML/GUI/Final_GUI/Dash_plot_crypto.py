@@ -75,6 +75,9 @@ def update_candlestick_chart(value,timeframe):
         df_plot = df_plot.resample('3M').agg(agg_dict)
         df_date = df_plot.index
 
+    df_plot['MA5'] = df_plot['Close'].rolling(5).mean()
+    df_plot['MA25'] = df_plot['Close'].rolling(25).mean()
+
     candles = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.1
                             , subplot_titles=('Candlestick', 'Volume'), row_width=[0.5, 1])
     candles.add_trace(go.Candlestick(x=df_date,
@@ -82,6 +85,9 @@ def update_candlestick_chart(value,timeframe):
                                          high=df_plot['High'],
                                          low=df_plot['Low'],
                                          close=df_plot['Close']), row=1, col=1)
+    
+    candles.add_trace(go.Scatter(x=df_date, y=df_plot['MA5'], line=dict(color='orange')), row=1, col=1)
+    candles.add_trace(go.Scatter(x=df_date, y=df_plot['MA25'] , line=dict(color='green')), row=1, col=1)
 
     candles.add_trace(go.Bar(x=df_date,y=df_plot['Volume'],), row=2, col=1)
 
@@ -93,11 +99,10 @@ def update_candlestick_chart(value,timeframe):
         my_range = pd.date_range(start= min(df_plot['Date']), end= max(df_plot['Date']), freq='D')
         missing_date = my_range.difference(df_plot['Date']).strftime("%Y-%m-%d").tolist()
         candles.update_xaxes(rangebreaks=[dict(values=missing_date)])
-    else:
-        pass
 
     candles.update(layout_xaxis_rangeslider_visible=False)
     candles.update_xaxes(showticklabels=False)
+    candles['layout'].update(height=750)
     return candles
 
 if __name__ == '__main__':

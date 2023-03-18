@@ -4,17 +4,19 @@ from plotly.subplots import make_subplots
 import sqlite3
 import pandas as pd
 
-conn = sqlite3.connect('share_V3.sqlite')
+conn = sqlite3.connect(r'C:\Users\Admin\Desktop\SOFTDEV2\SOFTWARE-DEVELOPMENT-2\share_V3.sqlite')
 df_day = pd.read_sql("""SELECT spd."Date", spd.Open, spd.High, spd.Low, spd.Close, spd."Adj Close", spd.Volume, i.Symbol 
                      FROM Stock_price_day as spd 
                      INNER JOIN Information as i
-                     ON i.SymbolId = spd.SymbolId;"""
+                     ON i.SymbolId = spd.SymbolId
+                     ORDER BY spd."Date" ASC;"""
                      ,conn)
 
 df_hour = pd.read_sql("""SELECT sph."Datetime", sph.Open, sph.High, sph.Low, sph.Close, sph."Adj Close", sph.Volume, i.Symbol 
                      FROM Stock_price_hours as sph 
                      INNER JOIN Information as i
-                     ON i.SymbolId = sph.SymbolId;"""
+                     ON i.SymbolId = sph.SymbolId
+                     ORDER BY sph."Datetime" ASC;"""
                      ,conn)
 
 def get_stock_names():
@@ -33,6 +35,7 @@ timeframe_options = [{'label': 'Hour', 'value': '1H'},
                     {'label': 'Month', 'value': '1M'},
                     {'label': '3Month', 'value': '3M'}]
 app.layout = html.Div([
+                html.H1(id='output'),
                 html.Div([
                     html.Label('Choose a stock:'),
                     dcc.Dropdown(id='stock_dropdown',
@@ -104,6 +107,12 @@ def update_candlestick_chart(value,timeframe):
     candles.update_xaxes(showticklabels=False)
     candles['layout'].update(height=750)
     return candles
+
+@app.callback(Output('output', 'children'),
+              [Input('stock_dropdown', 'value')])
+def update_output(value):
+    if value is not None:
+        return f"{value}"
 
 if __name__ == '__main__':
     app.run_server(debug=True, port=3000)

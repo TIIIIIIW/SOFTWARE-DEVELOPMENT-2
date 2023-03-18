@@ -9,7 +9,66 @@ import plotly.express as px
 import geopandas as gpd
 from Class_update_Share import Update_Stock
 from selenium import webdriver
+import time
 
+#---------------------------------------------------------------- Threading
+class UpdatePriceThread(QThread):
+    finished = pyqtSignal()
+    updateProgress = pyqtSignal(int)
+    def __init__(self, selected_item, stock_type):
+        super().__init__()
+        self.selected_item = selected_item
+        self.stock_type = stock_type
+    def run(self):
+        progress = 0
+        while progress < 100:
+            progress += 33
+            self.updateProgress.emit(progress)
+            Update_Stock(self.stock_type).UpdatePicehours(f'{self.selected_item}')
+            progress += 33
+            self.updateProgress.emit(progress)
+            Update_Stock(self.stock_type).UpdatePiceDays(f'{self.selected_item}')
+            progress += 34
+            self.updateProgress.emit(progress)
+            time.sleep(1)
+        self.finished.emit()
+
+class UpdateFncThread(QThread):
+    finished = pyqtSignal()
+    updateProgress = pyqtSignal(int)
+    def __init__(self, selected_item, stock_type):
+        super().__init__()
+        self.selected_item = selected_item
+        self.stock_type = stock_type
+    def run(self):
+        progress = 0
+        while progress < 100:
+            progress += 50
+            self.updateProgress.emit(progress)
+            driver = webdriver.Chrome(r"C:\Users\Admin\Desktop\SOFTDEV2\SOFTWARE-DEVELOPMENT-2\ML\Data\chromedriver.exe")
+            Update_Stock(self.stock_type).updateFinancial(driver, f'{self.selected_item}')
+            progress += 50
+            self.updateProgress.emit(progress)
+            time.sleep(1)
+        self.finished.emit()
+
+class UpdateNewsThread(QThread):
+    finished = pyqtSignal()
+    updateProgress = pyqtSignal(int)
+    def __init__(self, selected_item, stock_type):
+        super().__init__()
+        self.selected_item = selected_item
+        self.stock_type = stock_type
+    def run(self):
+        progress = 0
+        while progress < 100:
+            progress += 50
+            self.updateProgress.emit(progress)
+            Update_Stock(self.stock_type).UpdateNews(f'{self.selected_item}')
+            progress += 50
+            self.updateProgress.emit(progress)
+            time.sleep(1)
+        self.finished.emit()
 
 class Ui_MainWindow(object):
     def __init__(self) :
@@ -438,43 +497,82 @@ class Ui_MainWindow(object):
 #---------------------------------------------------------------- Update Price
     def updateSetPrice(self):
         selected_item = self.comboBox_dataset.currentText()
-        Update_Stock('SET').UpdatePicehours(f'{selected_item}')
-        Update_Stock('SET').UpdatePiceDays(f'{selected_item}')
+        self.updateSetPriceThread = UpdatePriceThread(selected_item, 'SET')
+        self.updateSetPriceThread.updateProgress.connect(self.progressBar.setValue)
+        self.updateSetPriceThread.start()
+        self.pushButton_updateset.setEnabled(False)
+        self.updateSetPriceThread.finished.connect(lambda: self.pushButton_updateset.setEnabled(True))
     def updateNasdaqPrice(self):
         selected_item = self.comboBox_datanasdaq.currentText()
-        Update_Stock('NASDAQ').UpdatePicehours(f'{selected_item}')
-        Update_Stock('NASDAQ').UpdatePiceDays(f'{selected_item}')
+        self.updateNasdaqPriceThread = UpdatePriceThread(selected_item, 'NASDAQ')
+        self.updateNasdaqPriceThread.updateProgress.connect(self.progressBar.setValue)
+        self.updateNasdaqPriceThread.start()
+        self.pushButton_updatenasdaq.setEnabled(False)
+        self.updateNasdaqPriceThread.finished.connect(lambda: self.pushButton_updatenasdaq.setEnabled(True))
     def updateCryptoPrice(self):
         selected_item = self.comboBox_datacrypto.currentText()
-        Update_Stock('CRYPTO').UpdatePicehours(f'{selected_item}')
-        Update_Stock('CRYPTO').UpdatePiceDays(f'{selected_item}')
+        self.updateCryptoPriceThread = UpdatePriceThread(selected_item, 'CRYPTO')
+        self.updateCryptoPriceThread.updateProgress.connect(self.progressBar.setValue)
+        self.updateCryptoPriceThread.start()
+        self.pushButton_updatecrypto.setEnabled(False)
+        self.updateCryptoPriceThread.finished.connect(lambda: self.pushButton_updatecrypto.setEnabled(True))
 #---------------------------------------------------------------- Update Financial
     def updateSetFnc(self):
         selected_item = self.comboBox_fncset.currentText()
-        driver = webdriver.Chrome(r"C:\Users\Admin\Desktop\SOFTDEV2\SOFTWARE-DEVELOPMENT-2\ML\Data\chromedriver.exe")
-        Update_Stock('SET').updateFinancial(driver,f'{selected_item}')
+        selected_item = selected_item[:-3]
+        self.updateSetFncThread = UpdateFncThread(selected_item, 'SET')
+        self.updateSetFncThread.updateProgress.connect(self.progressBar.setValue)
+        self.updateSetFncThread.start()
+        self.pushButton_updatefncset.setEnabled(False)
+        self.updateSetFncThread.finished.connect(lambda: self.pushButton_updatefncset.setEnabled(True))
+        self.updateSetFncThread.finished.connect(self.load_fncset_all)
+        self.updateSetFncThread.finished.connect(self.load_fncset)
     def updateNasdaqFnc(self):
         selected_item = self.comboBox_fncnasdaq.currentText()
-        driver = webdriver.Chrome(r"C:\Users\Admin\Desktop\SOFTDEV2\SOFTWARE-DEVELOPMENT-2\ML\Data\chromedriver.exe")
-        Update_Stock('NASDAQ').updateFinancial(driver,f'{selected_item}')
+        self.updateNasdaqFncThread = UpdateFncThread(selected_item, 'NASDAQ')
+        self.updateNasdaqFncThread.updateProgress.connect(self.progressBar.setValue)
+        self.updateNasdaqFncThread.start()
+        self.pushButton_updatefncnasdaq.setEnabled(False)
+        self.updateNasdaqFncThread.finished.connect(lambda: self.pushButton_updatefncnasdaq.setEnabled(True))
+        self.updateNasdaqFncThread.finished.connect(self.load_fncnasdaq_all)
+        self.updateNasdaqFncThread.finished.connect(self.load_fncnasdaq)
 #---------------------------------------------------------------- Update News
     def updateSetNews(self):
         selected_item = self.comboBox_newsset.currentText()
-        Update_Stock('SET').UpdateNews(f'{selected_item}')
+        selected_item = selected_item[:-3]
+        self.updateSetNewsThread =  UpdateNewsThread(selected_item, 'SET')
+        self.updateSetNewsThread.updateProgress.connect(self.progressBar.setValue)
+        self.updateSetNewsThread.start()
+        self.pushButton_updatenewsset.setEnabled(False)
+        self.updateSetNewsThread.finished.connect(lambda: self.pushButton_updatenewsset.setEnabled(True))
+        self.updateSetNewsThread.finished.connect(self.load_newsall)
+        self.updateSetNewsThread.finished.connect(self.load_newsset)
+        self.updateSetNewsThread.finished.connect(self.spatial_newsset)
     def updateNasdaqNews(self):
         selected_item = self.comboBox_newsnasdaq.currentText()
-        Update_Stock('NASDAQ').UpdateNews(f'{selected_item}')
+        self.updateNasdaqNewsThread =  UpdateNewsThread(selected_item, 'NASDAQ')
+        self.updateNasdaqNewsThread.updateProgress.connect(self.progressBar.setValue)
+        self.updateNasdaqNewsThread.start()
+        self.pushButton_updatenewsnasdaq.setEnabled(False)
+        self.updateNasdaqNewsThread.finished.connect(lambda: self.pushButton_updatenewsnasdaq.setEnabled(True))
+        self.updateNasdaqNewsThread.finished.connect(self.load_newsall)
+        self.updateNasdaqNewsThread.finished.connect(self.load_newsnasdaq)
+        self.updateNasdaqNewsThread.finished.connect(self.spatial_newsnasdaq)
     def updateCryptoNews(self):
         selected_item = self.comboBox_newscrypto.currentText()
-        Update_Stock('CRYPTO').UpdateNews(f'{selected_item}')
-
-
-
+        self.updateCryptoNewsThread =  UpdateNewsThread(selected_item, 'CRYPTO')
+        self.updateCryptoNewsThread.updateProgress.connect(self.progressBar.setValue)
+        self.updateCryptoNewsThread.start()
+        self.pushButton_updatenewscrypto.setEnabled(False)
+        self.updateCryptoNewsThread.finished.connect(lambda: self.pushButton_updatenewscrypto.setEnabled(True))
+        self.updateCryptoNewsThread.finished.connect(self.load_newsall)
+        self.updateCryptoNewsThread.finished.connect(self.load_newscrypto)
+        self.updateCryptoNewsThread.finished.connect(self.spatial_newscrypto)
 
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1820, 961)
+        MainWindow.resize(1820, 941)
         MainWindow.setMinimumSize(QtCore.QSize(1820, 920))
         MainWindow.setMaximumSize(QtCore.QSize(1820, 961))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -482,7 +580,9 @@ class Ui_MainWindow(object):
         self.centralwidget.setMaximumSize(QtCore.QSize(1820, 920))
         self.centralwidget.setObjectName("centralwidget")
         self.All = QtWidgets.QWidget(self.centralwidget)
-        self.All.setGeometry(QtCore.QRect(0, 0, 1821, 951))
+        self.All.setGeometry(QtCore.QRect(0, 0, 1820, 920))
+        self.All.setMinimumSize(QtCore.QSize(1820, 920))
+        self.All.setMaximumSize(QtCore.QSize(1820, 920))
         self.All.setStyleSheet("background-color: #353535;")
         self.All.setObjectName("All")
         self.Header = QtWidgets.QFrame(self.All)
@@ -759,6 +859,7 @@ class Ui_MainWindow(object):
         self.pushButton_updatenewsset.setObjectName("pushButton_updatenewsset")
         self.comboBox_timenewsset = QtWidgets.QComboBox(self.NewsSet)
         self.comboBox_timenewsset.setGeometry(QtCore.QRect(10, 20, 71, 31))
+        self.comboBox_timenewsset.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.comboBox_timenewsset.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.comboBox_timenewsset.setObjectName("comboBox_timenewsset")
         self.comboBox_timenewsset.addItem("")
@@ -985,6 +1086,7 @@ class Ui_MainWindow(object):
         self.pushButton_updatenewsnasdaq.setObjectName("pushButton_updatenewsnasdaq")
         self.comboBox_timenewsnasdaq = QtWidgets.QComboBox(self.NewsNasdaq)
         self.comboBox_timenewsnasdaq.setGeometry(QtCore.QRect(10, 20, 71, 31))
+        self.comboBox_timenewsnasdaq.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.comboBox_timenewsnasdaq.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.comboBox_timenewsnasdaq.setObjectName("comboBox_timenewsnasdaq")
         self.comboBox_timenewsnasdaq.addItem("")
@@ -1130,6 +1232,7 @@ class Ui_MainWindow(object):
         self.pushButton_updatenewscrypto.setObjectName("pushButton_updatenewscrypto")
         self.comboBox_timenewscrypto = QtWidgets.QComboBox(self.NewsCrypto)
         self.comboBox_timenewscrypto.setGeometry(QtCore.QRect(10, 20, 71, 31))
+        self.comboBox_timenewscrypto.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.comboBox_timenewscrypto.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.comboBox_timenewscrypto.setObjectName("comboBox_timenewscrypto")
         self.comboBox_timenewscrypto.addItem("")
@@ -1168,6 +1271,7 @@ class Ui_MainWindow(object):
         self.tableWidget_allnews.setHorizontalHeaderItem(4, item)
         self.comboBox_timenewsall = QtWidgets.QComboBox(self.AllNewsPage)
         self.comboBox_timenewsall.setGeometry(QtCore.QRect(10, 10, 71, 31))
+        self.comboBox_timenewsall.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.comboBox_timenewsall.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.comboBox_timenewsall.setObjectName("comboBox_timenewsall")
         self.comboBox_timenewsall.addItem("")
@@ -1201,6 +1305,7 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(15)
         self.comboBox_marketstock.setFont(font)
+        self.comboBox_marketstock.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.comboBox_marketstock.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.comboBox_marketstock.setObjectName("comboBox_marketstock")
         self.comboBox_marketstock.addItem("")
@@ -1208,11 +1313,19 @@ class Ui_MainWindow(object):
         self.comboBox_marketstock.addItem("")
         self.pushButton_addstock = QtWidgets.QPushButton(self.add_data)
         self.pushButton_addstock.setGeometry(QtCore.QRect(370, 320, 331, 31))
+        self.pushButton_addstock.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.pushButton_addstock.setStyleSheet("background-color: rgb(225, 255, 228);")
         self.pushButton_addstock.setObjectName("pushButton_addstock")
         self.lineEdit_addresult = QtWidgets.QLineEdit(self.add_data)
         self.lineEdit_addresult.setGeometry(QtCore.QRect(480, 370, 113, 20))
         self.lineEdit_addresult.setObjectName("lineEdit_addresult")
+        self.progressBar = QtWidgets.QProgressBar(self.All)
+        self.progressBar.setGeometry(QtCore.QRect(30, 880, 1771, 23))
+        font = QtGui.QFont()
+        font.setPointSize(1)
+        self.progressBar.setFont(font)
+        self.progressBar.setProperty("value", 0)
+        self.progressBar.setObjectName("progressBar")
         self.Header.raise_()
         self.pushButton_add.raise_()
         self.AllNewsPage.raise_()
@@ -1220,6 +1333,7 @@ class Ui_MainWindow(object):
         self.NASDAQPage.raise_()
         self.CryptoPage.raise_()
         self.SETPage.raise_()
+        self.progressBar.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1820, 21))
@@ -1676,7 +1790,6 @@ class Ui_MainWindow(object):
         self.comboBox_marketstock.setItemText(1, _translate("MainWindow", "NASDAQ"))
         self.comboBox_marketstock.setItemText(2, _translate("MainWindow", "CRYPTO"))
         self.pushButton_addstock.setText(_translate("MainWindow", "Submit"))
-
 
 #------------------------------------------------------------------ Column Width Datanasdaq
         self.tableWidget_datanasdaq.setColumnWidth(1, 350)

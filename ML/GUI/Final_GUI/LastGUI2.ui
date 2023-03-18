@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1820</width>
-    <height>961</height>
+    <height>941</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -43,9 +43,21 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1821</width>
-      <height>951</height>
+      <width>1820</width>
+      <height>920</height>
      </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>1820</width>
+      <height>920</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>1820</width>
+      <height>920</height>
+     </size>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: #353535;</string>
@@ -786,6 +798,9 @@
          <height>31</height>
         </rect>
        </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
@@ -1412,6 +1427,9 @@
          <height>31</height>
         </rect>
        </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
@@ -1821,6 +1839,9 @@
          <height>31</height>
         </rect>
        </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
@@ -1929,6 +1950,9 @@
         <height>31</height>
        </rect>
       </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
       <property name="styleSheet">
        <string notr="true">background-color: rgb(255, 255, 255);</string>
       </property>
@@ -2033,6 +2057,9 @@
          <pointsize>15</pointsize>
         </font>
        </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(255, 255, 255);</string>
        </property>
@@ -2061,6 +2088,9 @@
          <height>31</height>
         </rect>
        </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(225, 255, 228);</string>
        </property>
@@ -2080,6 +2110,24 @@
       </widget>
      </widget>
     </widget>
+    <widget class="QProgressBar" name="progressBar">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>880</y>
+       <width>1771</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>1</pointsize>
+      </font>
+     </property>
+     <property name="value">
+      <number>0</number>
+     </property>
+    </widget>
     <zorder>Header</zorder>
     <zorder>pushButton_add</zorder>
     <zorder>AllNewsPage</zorder>
@@ -2087,6 +2135,7 @@
     <zorder>NASDAQPage</zorder>
     <zorder>CryptoPage</zorder>
     <zorder>SETPage</zorder>
+    <zorder>progressBar</zorder>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

@@ -22,10 +22,12 @@ import numpy
 from googletrans import Translator
 from geopy.geocoders import Nominatim
 from alpha_vantage.fundamentaldata import FundamentalData
+from selenium.common.exceptions import NoSuchElementException
 
 class Update_Stock():
     def __init__(self,market) :
         self.location_db = r'C:\Users\Admin\Desktop\SOFTDEV2\SOFTWARE-DEVELOPMENT-2\share_V3.sqlite'
+        self.location_driver = r"C:\Users\Admin\Desktop\SOFTDEV2\SOFTWARE-DEVELOPMENT-2\ML\Data\chromedriver.exe"
         self.Market = str(market)
 
     def get_symbol_id(self):
@@ -120,13 +122,13 @@ class Update_Stock():
     # ----------------------------------------------------------- For News -----------------------------------
 
     def KaohoonNews(self,share):
-        print(share)
+
         chest,I,tag_share_news  = [],0,{}
         url = requests.get(f"https://www.kaohoon.com/?s={share}")
         soup = BeautifulSoup(url.text, 'html')
         for ultag in soup.find_all('ul', {'class': 'posts-items'}):
             for li in ultag.find_all('li'):
-                df,st  = {},''
+                df,st,tags  = {},'',[]
                 text = (li.text).split('\n')
                 df['Date'],df['Title'],df['Description'],df['Img'],df['Link'],df['Source'] = text[3],text[4],text[5],li.find('img')['src'],li.find('a')['href'],'kaohoon'
                 soup = BeautifulSoup((requests.get(f"{df['Link']}")).text, 'html')
@@ -137,7 +139,11 @@ class Update_Stock():
                     if text != '':
                         st += li.text + '\n'
                 df['Content'] = st
-                tag_share_news[df['Title']] = []
+                span = soup.find('span', {'class': 'tagcloud'})
+                tags = []
+                if str(span) != 'None': tags = [i.text for i in span.find_all('a')]
+                tag_share_news[df['Title']] = tags
+
                 if st != '': chest.append(df)
         return  pd.DataFrame(chest),tag_share_news
 
@@ -180,12 +186,15 @@ class Update_Stock():
 
     def Share_finder(self,words,NewsId,source):
         # connect to the database
+        words = list(numpy.unique(words))
         conn = sqlite3.connect(self.location_db)
         c = conn.cursor()
         share = []
         for word in words : 
             w = word
-            if source == 'kaohoon': w = word + '.BK'
+            if source == 'kaohoon': 
+                if word == 'BAT-3K': word = '3K-BAT'
+                w = word + '.BK'
             # search for words in the table
             c.execute(f"""SELECT * FROM Information WHERE Symbol="{w}" or Sname="{word}"; """)
             results = c.fetchall()
@@ -206,7 +215,7 @@ class Update_Stock():
         data = list(df_news.itertuples(index=False, name=None))
         tool = Update_Stock('SET')
         for i in range(len(data)):
-            print(df_news['Title'][i])
+
             # ตรวจสอบ News ว่ามีใน database รึยัง
             NewsId = tool.get_id_News(df_news['Title'][i])
             
@@ -215,12 +224,16 @@ class Update_Stock():
                 tool.InsertDB_SqlCommand('News',column,data[i])
                 # # # ดึง id ใหม่อีกครั้งจากหุ้นที่พึงเพิ่มเข้าไป
                 NewsId = tool.get_id_News(df_news['Title'][i])
-                en = Location_finder( df_news['Content'][i])
+                en = Location_finder( df_news['Content'][i] + df_news['Title'][i])
+
                 words = en.Separate_words()
-                words += tag[df_news['Title'][i]]
-                share = tool.Share_finder(words,NewsId,df_news['Source'][i])
-                shareNews += share
                 words = en.filter_special_2(words)
+                words += tag[df_news['Title'][i]]
+                print(words)
+                share = tool.Share_finder(words,NewsId,df_news['Source'][i])
+                print(share)
+                shareNews += share
+                
                 loca = en.find_location(words,NewsId)
                 locaNew += loca
                 
@@ -231,7 +244,7 @@ class Update_Stock():
         # !!!!!! sensitive function !!!!!!!!!
         tool.InsertDB_Pandas('Share_in_News',shareinNews)
         print(locainNews,shareinNews)
-        print('-----------------------100%-----------------------------------')
+
         return df_news,locainNews,shareinNews
     
     def UpdateNews(self,share):
@@ -431,6 +444,185 @@ class Update_Stock():
         con.commit()
         con.close
 
+
+#--------------------------------------- NASDAQ CRYPTO------------------------------------------------------------
+
+
+    def Set_up_WebScraping_Info_NASDAQ_CRYPTO(self,share):
+        
+        options = Options()
+        options.add_argument('--headless')
+        options.add_argument('--disable-gpu')
+        driver = webdriver.Chrome(self.location_driver, chrome_options=options)
+        driver.get(f"https://finance.yahoo.com/quote/{str(share)}/profile")
+        time.sleep(2)
+
+        try :
+            driver.find_element(By.XPATH, '//*[@id="myLightboxContainer"]/section/button[2]').click()
+            return str(driver.page_source)
+        
+        except NoSuchElementException :
+
+            return ''
+
+    def get_new_NASDAQ_CRYPTO_info(self,share):
+        
+        info = {}
+        html = self.Set_up_WebScraping_Info_NASDAQ_CRYPTO(share)
+        soup = BeautifulSoup(html, 'html')
+        company = soup.find('h1', {'class': 'D(ib) Fz(18px)'})
+
+        if str(company) == 'None' : return {}
+
+        info['Symbol'],info['Sname'] = share,(company.text).split(f'({share})')[0][:-1]
+        target =  soup.find('div', {'class': 'Pt(10px) smartphone_Pt(20px) Lh(1.7)'})
+        info['MarketId'] = 3
+
+        if self.Market == 'NASDAQ' : info['Sector'],info['Industry'],info['MarketId'] = '','',2
+
+        if str(target) != str(None) :
+
+            ind_sec = target.find_all('p',{'class':'D(ib) Va(t)'})
+            chest = ind_sec[0].find_all('span',{'class':'Fw(600)'})[:-1]
+            info['Sector'] = chest[0].text
+            info['Industry'] = chest[1].text
+
+        return info
+
+#--------------------------------------- SET ------------------------------------------------------------
+# SET 
+    def Set_up_WebScraping_info_SET(self,url):
+        
+        options = Options()
+        options.add_argument('--headless')
+        options.add_argument('--disable-gpu')
+        driver = webdriver.Chrome(self.location_driver, chrome_options=options)
+        driver.get(url)
+        
+        return str(driver.page_source)
+
+    def filter_info(self,text):
+        company = ''
+        fil = text.replace('\n','').split(' ')
+        for word in fil : 
+            if word != '' : 
+                company += word + ' '
+
+        return company[:-1]
+
+    def get_SET_info(self,share):
+        
+        info,share = {},str(share)
+        html = self.Set_up_WebScraping_info_SET(f"https://www.settrade.com/en/equities/quote/{share}/company-profile/profile")
+        soup = BeautifulSoup(html, 'html')
+        company_data = soup.find('div', {'class': 'company-cover bg-white border rounded box-shadow p-4 pt-0'})
+
+        if str(company_data) == 'None' : return {}
+
+        info['Symbol'],info['Sname'],info['MarketId'] = share+'.BK',self.filter_info(company_data.find('h3').text),1
+        
+        Industry_data = soup.find('div', {'class': 'col-12 col-md-6 order-3 order-md-3 mb-3'})
+        info['Industry'] = self.filter_info(Industry_data.find('div', {'class': 'fs-14px text-middle-gray m-0'}).text)
+        Sector_data = soup.find('div', {'class': 'col-12 col-md-6 order-4 order-md-4 mb-3'})
+        info['Sector'] = self.filter_info(Sector_data.find('div', {'class': 'fs-14px text-middle-gray m-0'}).text)
+
+        return info
+
+#--------------------------------------- For all------------------------------------------------------------
+    def add_share_info(self,data):
+        
+        conn = sqlite3.connect(self.location_db)
+        
+        cur = conn.cursor()
+        cur.execute(f"""SELECT count(*) FROM Information WHERE Symbol = '{data['Symbol']}'""")
+        records = cur.fetchone()
+        
+        if records[0] == 0 :
+
+            cur.execute(f"""INSERT INTO Information (Symbol,Sname,MarketId) VALUES (?,?,?)""",(data['Symbol'],data['Sname'],data['MarketId']))
+            conn.commit()
+            cur.execute(f"Select SymbolId from Information where Symbol = '{data['Symbol']}'")
+            records = cur.fetchone()
+            
+            data['SymbolId'] = records[0]
+            conn.close()
+
+            return data
+        
+        conn.close()
+        return {}
+
+    def get_sector(self,data):
+
+        conn = sqlite3.connect(self.location_db)
+        
+        cur = conn.cursor()
+        cur.execute(f"""SELECT count(*),SectorId FROM Sector WHERE Short_Sector = '{data['Sector']}' or Full_Sector = '{data['Sector']}' and MarketId = '{data['MarketId']}' """)
+        print(f"""SELECT count(*),SectorId FROM Sector WHERE Short_Sector = '{data['Sector']}' or Full_Sector = '{data['Sector']}' and MarketId = '{data['MarketId']}' """)
+        records = cur.fetchone()
+        data['SectorId'] = None
+        conn.close()
+        if records[0] == 1 :
+            data['SectorId'] = records[1]
+
+            return data
+        
+        return data
+
+    def get_Industry(self,data):
+
+        conn = sqlite3.connect(self.location_db)
+        
+        cur = conn.cursor()
+        cur.execute(f"""SELECT count(*),IndustryId FROM Industry WHERE Short_Industry = '{data['Industry']}' or Full_Industry = '{data['Industry']}' and MarketId = '{data['MarketId']}' """)
+        records = cur.fetchone()
+        data['IndustryId'] = None
+        conn.close()
+        if records[0] == 1 :
+            data['IndustryId'] = records[1]
+
+            return data
+        
+        return data
+
+    def add_Category_share(self,data):
+
+        conn = sqlite3.connect(self.location_db)
+        
+        cur = conn.cursor()
+
+        cur.execute(f"""INSERT INTO Category (SymbolId,SectorId,IndustryId) VALUES (?,?,?)""",(data['SymbolId'],data['SectorId'],data['IndustryId']))
+
+        conn.commit()
+        cur.execute(f"Select SymbolId from Information where Symbol = '{data['Symbol']}'")
+        records = cur.fetchone()
+            
+        data['SymbolId'] = records[0]
+
+        return data
+    
+    def add_new_symbol(self,share):
+
+        if self.Market not in ['SET','NASDAQ','CRYPTO'] : return 'Available markets include: SET, NASDAQ, CRYPTO'
+        if self.Market == 'SET' : data = self.get_SET_info(share)
+        if self.Market == 'NASDAQ' : data = self.get_new_NASDAQ_CRYPTO_info(share)
+        if self.Market == 'CRYPTO'  : data = self.get_new_NASDAQ_CRYPTO_info(share+'-USD')
+        
+        if data == {}: return 'Something wrong'
+
+        data = self.add_share_info(data) 
+        
+        if data == {}: return f'{share} already in database'
+        print(data)
+        if self.Market != 'CRYPTO' :
+
+            data = self.get_sector(data)
+            data = self.get_Industry(data)
+            print(data)
+            data = self.add_Category_share(data)
+
+        return f'Add {share} success in database'
+        
 class Location_finder():
     def __init__(self,text) :      
         self.text = self.translate_text(text)

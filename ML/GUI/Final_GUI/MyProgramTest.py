@@ -6,6 +6,7 @@ import pandas as pd
 import plotly
 import plotly.graph_objs as go
 import plotly.express as px
+from plotly.subplots import make_subplots
 import geopandas as gpd
 from Class_update_Share import Update_Stock
 from selenium import webdriver
@@ -30,7 +31,7 @@ class UpdatePriceThread(QThread):
             Update_Stock(self.stock_type).UpdatePiceDays(f'{self.selected_item}')
             progress += 34
             self.updateProgress.emit(progress)
-            time.sleep(1)
+            time.sleep(0.25)
         self.finished.emit()
 
 class UpdateFncThread(QThread):
@@ -49,7 +50,7 @@ class UpdateFncThread(QThread):
             Update_Stock(self.stock_type).updateFinancial(driver, f'{self.selected_item}')
             progress += 50
             self.updateProgress.emit(progress)
-            time.sleep(1)
+            time.sleep(0.25)
         self.finished.emit()
 
 class UpdateNewsThread(QThread):
@@ -67,12 +68,62 @@ class UpdateNewsThread(QThread):
             Update_Stock(self.stock_type).UpdateNews(f'{self.selected_item}')
             progress += 50
             self.updateProgress.emit(progress)
-            time.sleep(1)
+            time.sleep(0.25)
         self.finished.emit()
+
+class AddStockSymbol(QThread):
+    finished = pyqtSignal(str)
+    updateProgress = pyqtSignal(int)
+    def __init__(self, selected_item, selected_text):
+        super().__init__()
+        self.stock_type = selected_item
+        self.stock_text = selected_text
+    def run(self):
+        progress = 0
+        while progress < 100:
+            progress += 50
+            self.updateProgress.emit(progress)
+            result = Update_Stock(f'{self.stock_type}').add_new_symbol(f'{self.stock_text}')
+            progress += 50
+            self.updateProgress.emit(progress)
+            time.sleep(0.25)
+        self.finished.emit(result)
+
 
 class Ui_MainWindow(object):
     def __init__(self) :
         self.location_db = r'C:\Users\Admin\Desktop\SOFTDEV2\SOFTWARE-DEVELOPMENT-2\share_V3.sqlite'
+
+#------------------------------------------------------ Name of Stock and Crypto
+    def combobox_SET(self):
+        conn = sqlite3.connect(self.location_db)
+        cursor = conn.cursor()
+        cursor.execute("""SELECT Symbol FROM Information WHERE MarketId = 1 ORDER BY Symbol ASC""")
+        result = cursor.fetchall()
+        values = [item[0] for item in result]
+        self.comboBox_dataset.addItems(values)
+        self.comboBox_fncset.addItems(values)
+        self.comboBox_newsset.addItems(values)
+        self.comboBox_priceset.addItems(values)
+    def combobox_NASDAQ(self):
+        conn = sqlite3.connect(self.location_db)
+        cursor = conn.cursor()
+        cursor.execute("""SELECT Symbol FROM Information WHERE MarketId = 2 ORDER BY Symbol ASC""")
+        result = cursor.fetchall()
+        values = [item[0] for item in result]
+        self.comboBox_datanasdaq.addItems(values)
+        self.comboBox_fncnasdaq.addItems(values)
+        self.comboBox_newsnasdaq.addItems(values)
+        self.comboBox_pricenasdaq.addItems(values)
+    def combobox_CRYPTO(self):
+        conn = sqlite3.connect(self.location_db)
+        cursor = conn.cursor()
+        cursor.execute("""SELECT Symbol FROM Information WHERE MarketId = 3 ORDER BY Symbol ASC""")
+        result = cursor.fetchall()
+        values = [item[0] for item in result]
+        self.comboBox_datacrypto.addItems(values)
+        self.comboBox_newscrypto.addItems(values)
+        self.comboBox_pricecrypto.addItems(values)
 #---------------------------------------------------------------- Load Data All
     def load_dataset_all(self):
         conn = sqlite3.connect(self.location_db)
@@ -167,10 +218,10 @@ class Ui_MainWindow(object):
         selected_item = self.comboBox_datanasdaq.currentText()
         conn = sqlite3.connect(self.location_db)
         sqlquery = f"""SELECT DISTINCT i.Symbol,i.Sname,m.Mname,s.Full_Sector,ind.Full_Industry FROM Information as i
-                        INNER JOIN Category as c ON c.SymbolId = i.SymbolId
-                        INNER JOIN Sector as s ON c.SectorId = s.SectorId
-                        INNER JOIN Industry as ind ON c.IndustryId = ind.IndustryId
-                        INNER JOIN Market as m ON m.MarketId = i.MarketId
+                        LEFT JOIN Category as c ON c.SymbolId = i.SymbolId
+                        LEFT JOIN Sector as s ON c.SectorId = s.SectorId
+                        LEFT JOIN Industry as ind ON c.IndustryId = ind.IndustryId
+                        LEFT JOIN Market as m ON m.MarketId = i.MarketId
                         WHERE i.Symbol = '{str(selected_item)}';"""
         result = conn.execute(sqlquery)
         self.tableWidget_searchnasdaq.setRowCount(0)
@@ -409,6 +460,49 @@ class Ui_MainWindow(object):
             for column_num, data in enumerate(row_data):
                 self.tableWidget_newscrypto.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
         conn.close()
+#---------------------------------------------------------------- Load Price Select
+    def load_priceset(self):
+        selected_item = self.comboBox_priceset.currentText()
+        conn = sqlite3.connect(self.location_db)
+        sqlquery = f"""SELECT spd.Date, spd.Open, spd.High, spd.Low, spd.Close, spd.Volume, i.Symbol FROM Stock_price_day as spd
+                            INNER JOIN Information as i ON i.SymbolId = spd.SymbolId
+                            WHERE i.Symbol = '{str(selected_item)}'
+                            ORDER BY Date DESC;"""
+        result = conn.execute(sqlquery)
+        self.tableWidget_priceset.setRowCount(0)
+        for row_num, row_data in enumerate(result):
+            self.tableWidget_priceset.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget_priceset.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
+    def load_pricenasdaq(self):
+        selected_item = self.comboBox_pricenasdaq.currentText()
+        conn = sqlite3.connect(self.location_db)
+        sqlquery = f"""SELECT spd.Date, spd.Open, spd.High, spd.Low, spd.Close, spd.Volume, i.Symbol FROM Stock_price_day as spd
+                            INNER JOIN Information as i ON i.SymbolId = spd.SymbolId
+                            WHERE i.Symbol = '{str(selected_item)}'
+                            ORDER BY Date DESC;"""
+        result = conn.execute(sqlquery)
+        self.tableWidget_pricenasdaq.setRowCount(0)
+        for row_num, row_data in enumerate(result):
+            self.tableWidget_pricenasdaq.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget_pricenasdaq.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
+    def load_pricecrypto(self):
+        selected_item = self.comboBox_pricecrypto.currentText()
+        conn = sqlite3.connect(self.location_db)
+        sqlquery = f"""SELECT spd.Date, spd.Open, spd.High, spd.Low, spd.Close, spd.Volume, i.Symbol FROM Stock_price_day as spd
+                            INNER JOIN Information as i ON i.SymbolId = spd.SymbolId
+                            WHERE i.Symbol = '{str(selected_item)}'
+                            ORDER BY Date DESC;"""
+        result = conn.execute(sqlquery)
+        self.tableWidget_pricecrypto.setRowCount(0)
+        for row_num, row_data in enumerate(result):
+            self.tableWidget_pricecrypto.insertRow(row_num)
+            for column_num, data in enumerate(row_data):
+                self.tableWidget_pricecrypto.setItem(row_num, column_num, QtWidgets.QTableWidgetItem(str(data)))
+        conn.close()
 #---------------------------------------------------------------- Spacial Select
     def spatial_newsset(self):
         selected_item = self.comboBox_newsset.currentText()
@@ -494,28 +588,277 @@ class Ui_MainWindow(object):
             html += plotly.offline.plot(fig, output_type='div', include_plotlyjs='cdn')
             html += '</body></html>'
             self.WebEngine_newscrypto.setHtml(html)
+#---------------------------------------------------------------- Plot Graph Select
+    def plot_set(self):
+        selected_item = self.comboBox_dataset.currentText()
+        selected_time = self.comboBox_timeframeset.currentText()
+        time.sleep(0.25)
+        conn = sqlite3.connect(self.location_db)
+        df_day = pd.read_sql(f"""SELECT spd."Date", spd.Open, spd.High, spd.Low, spd.Close, spd."Adj Close", spd.Volume, i.Symbol 
+                            FROM Stock_price_day as spd 
+                            INNER JOIN Information as i
+                            ON i.SymbolId = spd.SymbolId
+                            WHERE i.Symbol = '{selected_item}'
+                            ORDER BY spd."Date" ASC;""",conn)
+        
+        df_hour = pd.read_sql(f"""SELECT sph."Datetime", sph.Open, sph.High, sph.Low, sph.Close, sph."Adj Close", sph.Volume, i.Symbol 
+                     FROM Stock_price_hours as sph 
+                     INNER JOIN Information as i
+                     ON i.SymbolId = sph.SymbolId
+                     WHERE i.Symbol = '{selected_item}'
+                     ORDER BY sph."Datetime" ASC;""",conn)
+        
+        df_roaroe = pd.read_sql(f"""SELECT fq.ROA,fq.ROE,fq.Period FROM Financial_quarterly as fq
+                            INNER JOIN Information as i ON i.SymbolId = fq.SymbolId
+                            WHERE i.Symbol = '{selected_item}'
+                            ORDER BY i.Symbol ASC;""",conn)
+
+        if len(df_day) == 0:
+                fig = go.Figure(go.Candlestick())
+        else:
+            agg_dict = {'Open': 'first','High': 'max','Low': 'min','Close': 'last','Adj Close': 'last','Volume': 'sum'}
+            if selected_time == 'Hour':
+                df_plot = df_hour.tail(60)
+                df_plot['Datetime'] = pd.to_datetime(df_plot['Datetime'])
+                df_date = df_plot['Datetime']
+            elif selected_time == 'Day':
+                df_plot = df_day.tail(120)
+                df_plot['Date'] = pd.to_datetime(df_plot['Date'])
+                df_date = df_plot['Date']
+            elif selected_time == '3 Days':
+                df_plot = df_day.tail(300)
+                df_plot['Date'] = pd.to_datetime(df_plot['Date'])
+                df_plot.set_index('Date', inplace=True)
+                df_plot = df_plot.resample('3D').agg(agg_dict)
+                df_date = df_plot.index
+            elif selected_time == 'Weekly':
+                df_plot = df_day.tail(500)
+                df_plot['Date'] = pd.to_datetime(df_plot['Date'])
+                df_plot.set_index('Date', inplace=True)
+                df_plot = df_plot.resample('W').agg(agg_dict)
+                df_date = df_plot.index
+            elif selected_time == 'Monthly':
+                df_plot = df_day.tail(1000)
+                df_plot['Date'] = pd.to_datetime(df_plot['Date'])
+                df_plot.set_index('Date', inplace=True)
+                df_plot = df_plot.resample('M').agg(agg_dict)
+                df_date = df_plot.index
+
+            fig = make_subplots(rows=3, cols=1, shared_xaxes=True, vertical_spacing=0.1
+                                , subplot_titles=('Candlestick', 'Volume', 'ROA/ROE'), row_width=[1, 1, 1])
+            fig.add_trace(go.Candlestick(x=df_date,open=df_plot['Open'],
+                                        high=df_plot['High'],low=df_plot['Low'],
+                                        close=df_plot['Close'], name= selected_item), row=1, col=1)
+            fig.add_trace(go.Bar(x=df_date,y=df_plot['Volume'], name='Volume'), row=2, col=1)
+            fig.update(layout_xaxis_rangeslider_visible=False)
+
+            df_plot['MA5'] = df_plot['Close'].rolling(5).mean()
+            df_plot['MA25'] = df_plot['Close'].rolling(25).mean()
+            fig.add_trace(go.Scatter(x=df_date, y=df_plot['MA5'], line=dict(color='orange'), name='MA5'), row=1, col=1)
+            fig.add_trace(go.Scatter(x=df_date, y=df_plot['MA25'] , line=dict(color='yellow'), name='MA25'), row=1, col=1)
+
+            fig.add_trace(go.Scatter(x=df_roaroe['Period'], y=df_roaroe['ROA'] , line=dict(color='red'), name='ROA'), row=3, col=1)
+
+            if selected_time == 'Hour':
+                my_range = pd.date_range(start= min(df_plot['Datetime']), end= max(df_plot['Datetime']), freq='H')
+                missing_datetime = my_range.difference(df_plot['Datetime']).strftime("%Y-%m-%d H%:m%:s%").tolist()
+                fig.update_xaxes(rangebreaks=[dict(bounds=[17, 10], pattern="hour"),dict(values=missing_datetime, dvalue=3600000)])
+            elif selected_time == 'Day':
+                my_range = pd.date_range(start= min(df_plot['Date']), end= max(df_plot['Date']), freq='D')
+                missing_date = my_range.difference(df_plot['Date']).strftime("%Y-%m-%d").tolist()
+                fig.update_xaxes(rangebreaks=[dict(bounds=["sat", "mon"]), dict(values=missing_date)])
+
+        html = '<html><body>'
+        html += plotly.offline.plot(fig, output_type='div', include_plotlyjs='cdn')
+        html += '</body></html>'
+        self.WebEngine_set.setHtml(html)
+
+    def plot_nasdaq(self):
+        selected_item = self.comboBox_datanasdaq.currentText()
+        selected_time = self.comboBox_timeframenasdaq.currentText()
+        time.sleep(0.25)
+        conn = sqlite3.connect(self.location_db)
+        df_day = pd.read_sql(f"""SELECT spd."Date", spd.Open, spd.High, spd.Low, spd.Close, spd."Adj Close", spd.Volume, i.Symbol 
+                            FROM Stock_price_day as spd 
+                            INNER JOIN Information as i
+                            ON i.SymbolId = spd.SymbolId
+                            WHERE i.Symbol = '{selected_item}'
+                            ORDER BY spd."Date" ASC;""",conn)
+        
+        df_hour = pd.read_sql(f"""SELECT sph."Datetime", sph.Open, sph.High, sph.Low, sph.Close, sph."Adj Close", sph.Volume, i.Symbol 
+                     FROM Stock_price_hours as sph 
+                     INNER JOIN Information as i
+                     ON i.SymbolId = sph.SymbolId
+                     WHERE i.Symbol = '{selected_item}'
+                     ORDER BY sph."Datetime" ASC;""",conn)
+        
+        df_roaroe = pd.read_sql(f"""SELECT fq.ROA,fq.ROE,fq.Period FROM Financial_quarterly as fq
+                            INNER JOIN Information as i ON i.SymbolId = fq.SymbolId
+                            WHERE i.Symbol = '{selected_item}'
+                            ORDER BY i.Symbol ASC;""",conn)
+        if len(df_day) == 0:
+                fig = go.Figure(go.Candlestick())
+        else:
+            agg_dict = {'Open': 'first','High': 'max','Low': 'min','Close': 'last','Adj Close': 'last','Volume': 'sum'}
+            if selected_time == 'Hour':
+                df_plot = df_hour.tail(60)
+                df_plot['Datetime'] = pd.to_datetime(df_plot['Datetime'])
+                df_date = df_plot['Datetime']
+            elif selected_time == 'Day':
+                df_plot = df_day.tail(100)
+                df_plot['Date'] = pd.to_datetime(df_plot['Date'])
+                df_date = df_plot['Date']
+            elif selected_time == '3 Days':
+                df_plot = df_day.tail(200)
+                df_plot['Date'] = pd.to_datetime(df_plot['Date'])
+                df_plot.set_index('Date', inplace=True)
+                df_plot = df_plot.resample('3D').agg(agg_dict)
+                df_date = df_plot.index
+            elif selected_time == 'Weekly':
+                df_plot = df_day.tail(500)
+                df_plot['Date'] = pd.to_datetime(df_plot['Date'])
+                df_plot.set_index('Date', inplace=True)
+                df_plot = df_plot.resample('W').agg(agg_dict)
+                df_date = df_plot.index
+            elif selected_time == 'Monthly':
+                df_plot = df_day.tail(700)
+                df_plot['Date'] = pd.to_datetime(df_plot['Date'])
+                df_plot.set_index('Date', inplace=True)
+                df_plot = df_plot.resample('M').agg(agg_dict)
+                df_date = df_plot.index
+
+            fig = make_subplots(rows=3, cols=1, shared_xaxes=True, vertical_spacing=0.1
+                                , subplot_titles=('Candlestick', 'Volume', 'ROA/ROE'), row_width=[1, 1, 1])
+            fig.add_trace(go.Candlestick(x=df_date,open=df_plot['Open'],
+                                        high=df_plot['High'],low=df_plot['Low'],
+                                        close=df_plot['Close'], name= selected_item), row=1, col=1)
+            fig.add_trace(go.Bar(x=df_date,y=df_plot['Volume'], name='Volume'), row=2, col=1)
+            fig.update(layout_xaxis_rangeslider_visible=False)
+
+            df_plot['MA5'] = df_plot['Close'].rolling(5).mean()
+            df_plot['MA25'] = df_plot['Close'].rolling(25).mean()
+            fig.add_trace(go.Scatter(x=df_date, y=df_plot['MA5'], line=dict(color='orange'), name='MA5'), row=1, col=1)
+            fig.add_trace(go.Scatter(x=df_date, y=df_plot['MA25'] , line=dict(color='yellow'), name='MA25'), row=1, col=1)
+
+            fig.add_trace(go.Scatter(x=df_roaroe['Period'], y=df_roaroe['ROA'] , line=dict(color='red'), name='ROA'), row=3, col=1)
+
+            if selected_time == 'Hour':
+                my_range = pd.date_range(start= min(df_plot['Datetime']), end= max(df_plot['Datetime']), freq='H')
+                missing_datetime = my_range.difference(df_plot['Datetime']).strftime("%Y-%m-%d H%:m%:s%").tolist()
+                fig.update_xaxes(rangebreaks=[dict(values=missing_datetime, dvalue=3600000)])
+            elif selected_time == 'Day':
+                my_range = pd.date_range(start= min(df_plot['Date']), end= max(df_plot['Date']), freq='D')
+                missing_date = my_range.difference(df_plot['Date']).strftime("%Y-%m-%d").tolist()
+                fig.update_xaxes(rangebreaks=[dict(bounds=["sat", "mon"]), dict(values=missing_date)])
+
+        html = '<html><body>'
+        html += plotly.offline.plot(fig, output_type='div', include_plotlyjs='cdn')
+        html += '</body></html>'
+        self.WebEngine_nasdaq.setHtml(html)
+
+    def plot_crypto(self):
+        selected_item = self.comboBox_datacrypto.currentText()
+        selected_time = self.comboBox_timeframecrypto.currentText()
+        time.sleep(0.25)
+        conn = sqlite3.connect(self.location_db)
+        df_day = pd.read_sql(f"""SELECT spd."Date", spd.Open, spd.High, spd.Low, spd.Close, spd."Adj Close", spd.Volume, i.Symbol 
+                            FROM Stock_price_day as spd 
+                            INNER JOIN Information as i
+                            ON i.SymbolId = spd.SymbolId
+                            WHERE i.Symbol = '{selected_item}'
+                            ORDER BY spd."Date" ASC;""",conn)
+        
+        df_hour = pd.read_sql(f"""SELECT sph."Datetime", sph.Open, sph.High, sph.Low, sph.Close, sph."Adj Close", sph.Volume, i.Symbol 
+                     FROM Stock_price_hours as sph 
+                     INNER JOIN Information as i
+                     ON i.SymbolId = sph.SymbolId
+                     WHERE i.Symbol = '{selected_item}'
+                     ORDER BY sph."Datetime" ASC;""",conn)
+        if len(df_day) == 0:
+                fig = go.Figure(go.Candlestick())
+        else:
+            agg_dict = {'Open': 'first','High': 'max','Low': 'min','Close': 'last','Adj Close': 'last','Volume': 'sum'}
+            if selected_time == 'Hour':
+                df_plot = df_hour.tail(60)
+                df_plot['Datetime'] = pd.to_datetime(df_plot['Datetime'])
+                df_date = df_plot['Datetime']
+            elif selected_time == 'Day':
+                df_plot = df_day.tail(120)
+                df_plot['Date'] = pd.to_datetime(df_plot['Date'])
+                df_date = df_plot['Date']
+            elif selected_time == '3 Days':
+                df_plot = df_day.tail(300)
+                df_plot['Date'] = pd.to_datetime(df_plot['Date'])
+                df_plot.set_index('Date', inplace=True)
+                df_plot = df_plot.resample('3D').agg(agg_dict)
+                df_date = df_plot.index
+            elif selected_time == 'Weekly':
+                df_plot = df_day.tail(500)
+                df_plot['Date'] = pd.to_datetime(df_plot['Date'])
+                df_plot.set_index('Date', inplace=True)
+                df_plot = df_plot.resample('W').agg(agg_dict)
+                df_date = df_plot.index
+            elif selected_time == 'Monthly':
+                df_plot = df_day.tail(1000)
+                df_plot['Date'] = pd.to_datetime(df_plot['Date'])
+                df_plot.set_index('Date', inplace=True)
+                df_plot = df_plot.resample('M').agg(agg_dict)
+                df_date = df_plot.index
+
+            fig = make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.1
+                                , subplot_titles=('Candlestick', 'Volume'), row_width=[1, 1])
+            fig.add_trace(go.Candlestick(x=df_date,open=df_plot['Open'],
+                                        high=df_plot['High'],low=df_plot['Low'],
+                                        close=df_plot['Close'], name= selected_item), row=1, col=1)
+            fig.add_trace(go.Bar(x=df_date,y=df_plot['Volume'], name='Volume'), row=2, col=1)
+            fig.update(layout_xaxis_rangeslider_visible=False)
+
+            df_plot['MA5'] = df_plot['Close'].rolling(5).mean()
+            df_plot['MA25'] = df_plot['Close'].rolling(25).mean()
+            fig.add_trace(go.Scatter(x=df_date, y=df_plot['MA5'], line=dict(color='orange'), name='MA5'), row=1, col=1)
+            fig.add_trace(go.Scatter(x=df_date, y=df_plot['MA25'] , line=dict(color='yellow'), name='MA25'), row=1, col=1)
+
+            if selected_time == 'Hour':
+                my_range = pd.date_range(start= min(df_plot['Datetime']), end= max(df_plot['Datetime']), freq='H')
+                missing_datetime = my_range.difference(df_plot['Datetime']).strftime("%Y-%m-%d H%:m%:s%").tolist()
+                fig.update_xaxes(rangebreaks=[dict(values=missing_datetime, dvalue=3600000)])
+            elif selected_time == 'Day':
+                my_range = pd.date_range(start= min(df_plot['Date']), end= max(df_plot['Date']), freq='D')
+                missing_date = my_range.difference(df_plot['Date']).strftime("%Y-%m-%d").tolist()
+                fig.update_xaxes(rangebreaks=[dict(values=missing_date)])
+
+        html = '<html><body>'
+        html += plotly.offline.plot(fig, output_type='div', include_plotlyjs='cdn')
+        html += '</body></html>'
+        self.WebEngine_crypto.setHtml(html)
 #---------------------------------------------------------------- Update Price
     def updateSetPrice(self):
-        selected_item = self.comboBox_dataset.currentText()
+        selected_item = self.comboBox_priceset.currentText()
         self.updateSetPriceThread = UpdatePriceThread(selected_item, 'SET')
         self.updateSetPriceThread.updateProgress.connect(self.progressBar.setValue)
         self.updateSetPriceThread.start()
         self.pushButton_updateset.setEnabled(False)
         self.updateSetPriceThread.finished.connect(lambda: self.pushButton_updateset.setEnabled(True))
+        self.updateSetPriceThread.finished.connect(self.plot_set)
+        self.updateSetPriceThread.finished.connect(self.load_priceset)
     def updateNasdaqPrice(self):
-        selected_item = self.comboBox_datanasdaq.currentText()
+        selected_item = self.comboBox_pricenasdaq.currentText()
         self.updateNasdaqPriceThread = UpdatePriceThread(selected_item, 'NASDAQ')
         self.updateNasdaqPriceThread.updateProgress.connect(self.progressBar.setValue)
         self.updateNasdaqPriceThread.start()
         self.pushButton_updatenasdaq.setEnabled(False)
         self.updateNasdaqPriceThread.finished.connect(lambda: self.pushButton_updatenasdaq.setEnabled(True))
+        self.updateNasdaqPriceThread.finished.connect(self.plot_nasdaq)
+        self.updateNasdaqPriceThread.finished.connect(self.load_pricenasdaq)
     def updateCryptoPrice(self):
-        selected_item = self.comboBox_datacrypto.currentText()
+        selected_item = self.comboBox_pricecrypto.currentText()
         self.updateCryptoPriceThread = UpdatePriceThread(selected_item, 'CRYPTO')
         self.updateCryptoPriceThread.updateProgress.connect(self.progressBar.setValue)
         self.updateCryptoPriceThread.start()
         self.pushButton_updatecrypto.setEnabled(False)
         self.updateCryptoPriceThread.finished.connect(lambda: self.pushButton_updatecrypto.setEnabled(True))
+        self.updateCryptoPriceThread.finished.connect(self.plot_crypto)
+        self.updateCryptoPriceThread.finished.connect(self.load_pricecrypto)
 #---------------------------------------------------------------- Update Financial
     def updateSetFnc(self):
         selected_item = self.comboBox_fncset.currentText()
@@ -568,6 +911,22 @@ class Ui_MainWindow(object):
         self.updateCryptoNewsThread.finished.connect(self.load_newsall)
         self.updateCryptoNewsThread.finished.connect(self.load_newscrypto)
         self.updateCryptoNewsThread.finished.connect(self.spatial_newscrypto)
+#---------------------------------------------------------------- Add Stock&CCrypto
+    def addStock(self):
+        selected_text = self.lineEdit_inputsymbol.text()
+        selected_market = self.comboBox_marketstock.currentText()
+        self.addStockThread = AddStockSymbol(selected_market, selected_text)
+        self.addStockThread.updateProgress.connect(self.progressBar.setValue)
+        self.addStockThread.finished.connect(self.lineEdit_addresult.setText)
+        self.addStockThread.start()
+        self.pushButton_addstock.setEnabled(False)
+        self.addStockThread.finished.connect(lambda: self.pushButton_addstock.setEnabled(True))
+        self.addStockThread.finished.connect(self.load_dataset_all)
+        self.addStockThread.finished.connect(self.load_datanasdaq_all)
+        self.addStockThread.finished.connect(self.load_datacrypto_all)
+        self.addStockThread.finished.connect(self.combobox_SET)
+        self.addStockThread.finished.connect(self.combobox_NASDAQ)
+        self.addStockThread.finished.connect(self.combobox_CRYPTO)
 
 
     def setupUi(self, MainWindow):
@@ -646,7 +1005,7 @@ class Ui_MainWindow(object):
         self.set_select.setStyleSheet("background-color: #E9EBEF;")
         self.set_select.setObjectName("set_select")
         self.verticalLayoutWidget = QtWidgets.QWidget(self.set_select)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(10, 20, 301, 276))
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(10, 20, 301, 332))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -660,6 +1019,15 @@ class Ui_MainWindow(object):
         self.pushButton_dataset.setStyleSheet("background-color: #D2D7DF;")
         self.pushButton_dataset.setObjectName("pushButton_dataset")
         self.verticalLayout.addWidget(self.pushButton_dataset)
+        self.pushButton_priceset = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.pushButton_priceset.setMinimumSize(QtCore.QSize(0, 50))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.pushButton_priceset.setFont(font)
+        self.pushButton_priceset.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.pushButton_priceset.setStyleSheet("background-color: #D2D7DF;")
+        self.pushButton_priceset.setObjectName("pushButton_priceset")
+        self.verticalLayout.addWidget(self.pushButton_priceset)
         self.pushButton_fncset = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.pushButton_fncset.setMinimumSize(QtCore.QSize(0, 50))
         font = QtGui.QFont()
@@ -701,6 +1069,7 @@ class Ui_MainWindow(object):
         self.pushButton_dataset.raise_()
         self.pushButton_spatialset.raise_()
         self.pushButton_graphset.raise_()
+        self.pushButton_priceset.raise_()
         self.Dataset = QtWidgets.QWidget(self.SETPage)
         self.Dataset.setGeometry(QtCore.QRect(350, 0, 1411, 791))
         self.Dataset.setStyleSheet("background-color: #D2D7DF;")
@@ -726,7 +1095,7 @@ class Ui_MainWindow(object):
         self.tableWidget_dataset.setHorizontalHeaderItem(5, item)
         self.tableWidget_dataset.horizontalHeader().setDefaultSectionSize(150)
         self.comboBox_dataset = QtWidgets.QComboBox(self.Dataset)
-        self.comboBox_dataset.setGeometry(QtCore.QRect(10, 10, 1241, 31))
+        self.comboBox_dataset.setGeometry(QtCore.QRect(10, 10, 1391, 31))
         self.comboBox_dataset.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.comboBox_dataset.setStyleSheet("background-color:#ffffff;")
         self.comboBox_dataset.setObjectName("comboBox_dataset")
@@ -749,11 +1118,6 @@ class Ui_MainWindow(object):
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_searchset.setHorizontalHeaderItem(5, item)
         self.tableWidget_searchset.horizontalHeader().setDefaultSectionSize(150)
-        self.pushButton_updateset = QtWidgets.QPushButton(self.Dataset)
-        self.pushButton_updateset.setGeometry(QtCore.QRect(1260, 10, 141, 31))
-        self.pushButton_updateset.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.pushButton_updateset.setStyleSheet("background-color: rgb(225, 255, 228);")
-        self.pushButton_updateset.setObjectName("pushButton_updateset")
         self.Financeset = QtWidgets.QWidget(self.SETPage)
         self.Financeset.setGeometry(QtCore.QRect(350, 0, 1411, 791))
         self.Financeset.setStyleSheet("background-color: #D2D7DF;")
@@ -825,8 +1189,22 @@ class Ui_MainWindow(object):
         self.tableWidget_searchfncset.raise_()
         self.Webview_graphset = QtWidgets.QWidget(self.SETPage)
         self.Webview_graphset.setGeometry(QtCore.QRect(350, 0, 1411, 791))
-        self.Webview_graphset.setStyleSheet("background-color: rgb(170, 255, 255);")
+        self.Webview_graphset.setStyleSheet("background-color: #E9EBEF;")
         self.Webview_graphset.setObjectName("Webview_graphset")
+        self.comboBox_timeframeset = QtWidgets.QComboBox(self.Webview_graphset)
+        self.comboBox_timeframeset.setGeometry(QtCore.QRect(10, 20, 71, 31))
+        self.comboBox_timeframeset.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.comboBox_timeframeset.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.comboBox_timeframeset.setObjectName("comboBox_timeframeset")
+        self.comboBox_timeframeset.addItem("")
+        self.comboBox_timeframeset.addItem("")
+        self.comboBox_timeframeset.addItem("")
+        self.comboBox_timeframeset.addItem("")
+        self.comboBox_timeframeset.addItem("")
+        self.plotGraphSet = QtWidgets.QWidget(self.Webview_graphset)
+        self.plotGraphSet.setGeometry(QtCore.QRect(0, 70, 1411, 721))
+        self.plotGraphSet.setStyleSheet("background-color: rgb(85, 255, 255);")
+        self.plotGraphSet.setObjectName("plotGraphSet")
         self.NewsSet = QtWidgets.QWidget(self.SETPage)
         self.NewsSet.setGeometry(QtCore.QRect(350, 0, 1411, 791))
         self.NewsSet.setStyleSheet("background-color: #D2D7DF;")
@@ -871,11 +1249,48 @@ class Ui_MainWindow(object):
         self.Webview_spatialset.setGeometry(QtCore.QRect(350, 0, 1411, 791))
         self.Webview_spatialset.setStyleSheet("background-color: rgb(255, 255, 0);")
         self.Webview_spatialset.setObjectName("Webview_spatialset")
+        self.Priceset = QtWidgets.QWidget(self.SETPage)
+        self.Priceset.setGeometry(QtCore.QRect(350, 0, 1411, 791))
+        self.Priceset.setStyleSheet("background-color: #D2D7DF;")
+        self.Priceset.setObjectName("Priceset")
+        self.tableWidget_priceset = QtWidgets.QTableWidget(self.Priceset)
+        self.tableWidget_priceset.setGeometry(QtCore.QRect(0, 50, 1411, 741))
+        self.tableWidget_priceset.setMaximumSize(QtCore.QSize(1411, 16777215))
+        self.tableWidget_priceset.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.tableWidget_priceset.setObjectName("tableWidget_priceset")
+        self.tableWidget_priceset.setColumnCount(7)
+        self.tableWidget_priceset.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_priceset.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_priceset.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_priceset.setHorizontalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_priceset.setHorizontalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_priceset.setHorizontalHeaderItem(4, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_priceset.setHorizontalHeaderItem(5, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_priceset.setHorizontalHeaderItem(6, item)
+        self.tableWidget_priceset.horizontalHeader().setDefaultSectionSize(200)
+        self.comboBox_priceset = QtWidgets.QComboBox(self.Priceset)
+        self.comboBox_priceset.setGeometry(QtCore.QRect(10, 10, 1241, 31))
+        self.comboBox_priceset.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.comboBox_priceset.setStyleSheet("background-color:#ffffff;")
+        self.comboBox_priceset.setObjectName("comboBox_priceset")
+        self.pushButton_updateset = QtWidgets.QPushButton(self.Priceset)
+        self.pushButton_updateset.setGeometry(QtCore.QRect(1260, 10, 141, 31))
+        self.pushButton_updateset.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.pushButton_updateset.setStyleSheet("background-color: rgb(225, 255, 228);")
+        self.pushButton_updateset.setObjectName("pushButton_updateset")
         self.set_select.raise_()
-        self.Webview_graphset.raise_()
-        self.Webview_spatialset.raise_()
+        self.Priceset.raise_()
         self.Financeset.raise_()
         self.NewsSet.raise_()
+        self.Webview_graphset.raise_()
+        self.Webview_spatialset.raise_()
         self.Dataset.raise_()
         self.NASDAQPage = QtWidgets.QWidget(self.All)
         self.NASDAQPage.setGeometry(QtCore.QRect(30, 80, 1761, 791))
@@ -886,7 +1301,7 @@ class Ui_MainWindow(object):
         self.nasdaq_select.setStyleSheet("background-color: #E9EBEF;")
         self.nasdaq_select.setObjectName("nasdaq_select")
         self.verticalLayoutWidget_2 = QtWidgets.QWidget(self.nasdaq_select)
-        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(10, 20, 301, 276))
+        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(10, 20, 301, 332))
         self.verticalLayoutWidget_2.setObjectName("verticalLayoutWidget_2")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_2)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -900,6 +1315,15 @@ class Ui_MainWindow(object):
         self.pushButton_datanasdaq.setStyleSheet("background-color: #D2D7DF;")
         self.pushButton_datanasdaq.setObjectName("pushButton_datanasdaq")
         self.verticalLayout_2.addWidget(self.pushButton_datanasdaq)
+        self.pushButton_pricenasdaq = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
+        self.pushButton_pricenasdaq.setMinimumSize(QtCore.QSize(0, 50))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.pushButton_pricenasdaq.setFont(font)
+        self.pushButton_pricenasdaq.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.pushButton_pricenasdaq.setStyleSheet("background-color: #D2D7DF;")
+        self.pushButton_pricenasdaq.setObjectName("pushButton_pricenasdaq")
+        self.verticalLayout_2.addWidget(self.pushButton_pricenasdaq)
         self.pushButton_fncnasdaq = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
         self.pushButton_fncnasdaq.setMinimumSize(QtCore.QSize(0, 50))
         font = QtGui.QFont()
@@ -959,7 +1383,7 @@ class Ui_MainWindow(object):
         self.tableWidget_datanasdaq.setHorizontalHeaderItem(4, item)
         self.tableWidget_datanasdaq.horizontalHeader().setDefaultSectionSize(150)
         self.comboBox_datanasdaq = QtWidgets.QComboBox(self.Datanasdaq)
-        self.comboBox_datanasdaq.setGeometry(QtCore.QRect(10, 10, 1241, 31))
+        self.comboBox_datanasdaq.setGeometry(QtCore.QRect(10, 10, 1391, 31))
         self.comboBox_datanasdaq.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.comboBox_datanasdaq.setStyleSheet("background-color:#ffffff;")
         self.comboBox_datanasdaq.setObjectName("comboBox_datanasdaq")
@@ -980,11 +1404,6 @@ class Ui_MainWindow(object):
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_searchnasdaq.setHorizontalHeaderItem(4, item)
         self.tableWidget_searchnasdaq.horizontalHeader().setDefaultSectionSize(150)
-        self.pushButton_updatenasdaq = QtWidgets.QPushButton(self.Datanasdaq)
-        self.pushButton_updatenasdaq.setGeometry(QtCore.QRect(1260, 10, 141, 31))
-        self.pushButton_updatenasdaq.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.pushButton_updatenasdaq.setStyleSheet("background-color: rgb(225, 255, 228);")
-        self.pushButton_updatenasdaq.setObjectName("pushButton_updatenasdaq")
         self.Financenasdaq = QtWidgets.QWidget(self.NASDAQPage)
         self.Financenasdaq.setGeometry(QtCore.QRect(350, 0, 1411, 791))
         self.Financenasdaq.setStyleSheet("background-color: #D2D7DF;")
@@ -1052,8 +1471,22 @@ class Ui_MainWindow(object):
         self.tableWidget_searchfncnasdaq.horizontalHeader().setDefaultSectionSize(156)
         self.Webview_graphnasdaq = QtWidgets.QWidget(self.NASDAQPage)
         self.Webview_graphnasdaq.setGeometry(QtCore.QRect(350, 0, 1411, 791))
-        self.Webview_graphnasdaq.setStyleSheet("background-color: rgb(255, 170, 255);")
+        self.Webview_graphnasdaq.setStyleSheet("background-color: #E9EBEF;")
         self.Webview_graphnasdaq.setObjectName("Webview_graphnasdaq")
+        self.comboBox_timeframenasdaq = QtWidgets.QComboBox(self.Webview_graphnasdaq)
+        self.comboBox_timeframenasdaq.setGeometry(QtCore.QRect(10, 20, 71, 31))
+        self.comboBox_timeframenasdaq.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.comboBox_timeframenasdaq.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.comboBox_timeframenasdaq.setObjectName("comboBox_timeframenasdaq")
+        self.comboBox_timeframenasdaq.addItem("")
+        self.comboBox_timeframenasdaq.addItem("")
+        self.comboBox_timeframenasdaq.addItem("")
+        self.comboBox_timeframenasdaq.addItem("")
+        self.comboBox_timeframenasdaq.addItem("")
+        self.plotGraphNasdaq = QtWidgets.QWidget(self.Webview_graphnasdaq)
+        self.plotGraphNasdaq.setGeometry(QtCore.QRect(0, 70, 1411, 721))
+        self.plotGraphNasdaq.setStyleSheet("background-color: rgb(255, 170, 255);")
+        self.plotGraphNasdaq.setObjectName("plotGraphNasdaq")
         self.NewsNasdaq = QtWidgets.QWidget(self.NASDAQPage)
         self.NewsNasdaq.setGeometry(QtCore.QRect(350, 0, 1411, 791))
         self.NewsNasdaq.setStyleSheet("background-color: #D2D7DF;")
@@ -1098,10 +1531,47 @@ class Ui_MainWindow(object):
         self.Webview_spatialnasdaq.setGeometry(QtCore.QRect(350, 0, 1411, 791))
         self.Webview_spatialnasdaq.setStyleSheet("background-color: rgb(170, 255, 127);")
         self.Webview_spatialnasdaq.setObjectName("Webview_spatialnasdaq")
+        self.Pricenasdaq = QtWidgets.QWidget(self.NASDAQPage)
+        self.Pricenasdaq.setGeometry(QtCore.QRect(350, 0, 1411, 791))
+        self.Pricenasdaq.setStyleSheet("background-color: #D2D7DF;")
+        self.Pricenasdaq.setObjectName("Pricenasdaq")
+        self.tableWidget_pricenasdaq = QtWidgets.QTableWidget(self.Pricenasdaq)
+        self.tableWidget_pricenasdaq.setGeometry(QtCore.QRect(0, 50, 1411, 741))
+        self.tableWidget_pricenasdaq.setMaximumSize(QtCore.QSize(1411, 16777215))
+        self.tableWidget_pricenasdaq.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.tableWidget_pricenasdaq.setObjectName("tableWidget_pricenasdaq")
+        self.tableWidget_pricenasdaq.setColumnCount(7)
+        self.tableWidget_pricenasdaq.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_pricenasdaq.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_pricenasdaq.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_pricenasdaq.setHorizontalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_pricenasdaq.setHorizontalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_pricenasdaq.setHorizontalHeaderItem(4, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_pricenasdaq.setHorizontalHeaderItem(5, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_pricenasdaq.setHorizontalHeaderItem(6, item)
+        self.tableWidget_pricenasdaq.horizontalHeader().setDefaultSectionSize(200)
+        self.comboBox_pricenasdaq = QtWidgets.QComboBox(self.Pricenasdaq)
+        self.comboBox_pricenasdaq.setGeometry(QtCore.QRect(10, 10, 1241, 31))
+        self.comboBox_pricenasdaq.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.comboBox_pricenasdaq.setStyleSheet("background-color:#ffffff;")
+        self.comboBox_pricenasdaq.setObjectName("comboBox_pricenasdaq")
+        self.pushButton_updatenasdaq = QtWidgets.QPushButton(self.Pricenasdaq)
+        self.pushButton_updatenasdaq.setGeometry(QtCore.QRect(1260, 10, 141, 31))
+        self.pushButton_updatenasdaq.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.pushButton_updatenasdaq.setStyleSheet("background-color: rgb(225, 255, 228);")
+        self.pushButton_updatenasdaq.setObjectName("pushButton_updatenasdaq")
         self.nasdaq_select.raise_()
+        self.Pricenasdaq.raise_()
         self.Financenasdaq.raise_()
-        self.Webview_graphnasdaq.raise_()
         self.NewsNasdaq.raise_()
+        self.Webview_graphnasdaq.raise_()
         self.Webview_spatialnasdaq.raise_()
         self.Datanasdaq.raise_()
         self.CryptoPage = QtWidgets.QWidget(self.All)
@@ -1128,6 +1598,15 @@ class Ui_MainWindow(object):
         self.pushButton_datacrypto.setStyleSheet("background-color: #D2D7DF;")
         self.pushButton_datacrypto.setObjectName("pushButton_datacrypto")
         self.verticalLayout_3.addWidget(self.pushButton_datacrypto)
+        self.pushButton_pricecrypto = QtWidgets.QPushButton(self.verticalLayoutWidget_3)
+        self.pushButton_pricecrypto.setMinimumSize(QtCore.QSize(0, 50))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.pushButton_pricecrypto.setFont(font)
+        self.pushButton_pricecrypto.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.pushButton_pricecrypto.setStyleSheet("background-color: #D2D7DF;")
+        self.pushButton_pricecrypto.setObjectName("pushButton_pricecrypto")
+        self.verticalLayout_3.addWidget(self.pushButton_pricecrypto)
         self.pushButton_graphcrypto = QtWidgets.QPushButton(self.verticalLayoutWidget_3)
         self.pushButton_graphcrypto.setMinimumSize(QtCore.QSize(0, 50))
         font = QtGui.QFont()
@@ -1174,7 +1653,7 @@ class Ui_MainWindow(object):
         self.tableWidget_datacrypto.setHorizontalHeaderItem(2, item)
         self.tableWidget_datacrypto.horizontalHeader().setDefaultSectionSize(230)
         self.comboBox_datacrypto = QtWidgets.QComboBox(self.Datacrypto)
-        self.comboBox_datacrypto.setGeometry(QtCore.QRect(10, 10, 1241, 31))
+        self.comboBox_datacrypto.setGeometry(QtCore.QRect(10, 10, 1391, 31))
         self.comboBox_datacrypto.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.comboBox_datacrypto.setStyleSheet("background-color:#ffffff;")
         self.comboBox_datacrypto.setObjectName("comboBox_datacrypto")
@@ -1191,15 +1670,24 @@ class Ui_MainWindow(object):
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_searchcrypto.setHorizontalHeaderItem(2, item)
         self.tableWidget_searchcrypto.horizontalHeader().setDefaultSectionSize(215)
-        self.pushButton_updatecrypto = QtWidgets.QPushButton(self.Datacrypto)
-        self.pushButton_updatecrypto.setGeometry(QtCore.QRect(1260, 10, 141, 31))
-        self.pushButton_updatecrypto.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.pushButton_updatecrypto.setStyleSheet("background-color: rgb(225, 255, 228);")
-        self.pushButton_updatecrypto.setObjectName("pushButton_updatecrypto")
         self.Webview_graphcrypto = QtWidgets.QWidget(self.CryptoPage)
         self.Webview_graphcrypto.setGeometry(QtCore.QRect(350, 0, 1411, 791))
-        self.Webview_graphcrypto.setStyleSheet("background-color: rgb(255, 0, 0);")
+        self.Webview_graphcrypto.setStyleSheet("background-color: #E9EBEF;")
         self.Webview_graphcrypto.setObjectName("Webview_graphcrypto")
+        self.comboBox_timeframecrypto = QtWidgets.QComboBox(self.Webview_graphcrypto)
+        self.comboBox_timeframecrypto.setGeometry(QtCore.QRect(10, 20, 71, 31))
+        self.comboBox_timeframecrypto.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.comboBox_timeframecrypto.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.comboBox_timeframecrypto.setObjectName("comboBox_timeframecrypto")
+        self.comboBox_timeframecrypto.addItem("")
+        self.comboBox_timeframecrypto.addItem("")
+        self.comboBox_timeframecrypto.addItem("")
+        self.comboBox_timeframecrypto.addItem("")
+        self.comboBox_timeframecrypto.addItem("")
+        self.plotGraphCrypto = QtWidgets.QWidget(self.Webview_graphcrypto)
+        self.plotGraphCrypto.setGeometry(QtCore.QRect(0, 70, 1411, 721))
+        self.plotGraphCrypto.setStyleSheet("background-color: rgb(255, 85, 127);")
+        self.plotGraphCrypto.setObjectName("plotGraphCrypto")
         self.NewsCrypto = QtWidgets.QWidget(self.CryptoPage)
         self.NewsCrypto.setGeometry(QtCore.QRect(350, 0, 1411, 791))
         self.NewsCrypto.setStyleSheet("background-color: #D2D7DF;")
@@ -1244,10 +1732,47 @@ class Ui_MainWindow(object):
         self.Webview_spatialcrypto.setGeometry(QtCore.QRect(350, 0, 1411, 791))
         self.Webview_spatialcrypto.setStyleSheet("background-color: rgb(170, 170, 255);")
         self.Webview_spatialcrypto.setObjectName("Webview_spatialcrypto")
+        self.Pricecrypto = QtWidgets.QWidget(self.CryptoPage)
+        self.Pricecrypto.setGeometry(QtCore.QRect(350, 0, 1411, 791))
+        self.Pricecrypto.setStyleSheet("background-color: #D2D7DF;")
+        self.Pricecrypto.setObjectName("Pricecrypto")
+        self.tableWidget_pricecrypto = QtWidgets.QTableWidget(self.Pricecrypto)
+        self.tableWidget_pricecrypto.setGeometry(QtCore.QRect(0, 50, 1411, 741))
+        self.tableWidget_pricecrypto.setMaximumSize(QtCore.QSize(1411, 16777215))
+        self.tableWidget_pricecrypto.setStyleSheet("background-color: rgb(255, 255, 255);")
+        self.tableWidget_pricecrypto.setObjectName("tableWidget_pricecrypto")
+        self.tableWidget_pricecrypto.setColumnCount(7)
+        self.tableWidget_pricecrypto.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_pricecrypto.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_pricecrypto.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_pricecrypto.setHorizontalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_pricecrypto.setHorizontalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_pricecrypto.setHorizontalHeaderItem(4, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_pricecrypto.setHorizontalHeaderItem(5, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.tableWidget_pricecrypto.setHorizontalHeaderItem(6, item)
+        self.tableWidget_pricecrypto.horizontalHeader().setDefaultSectionSize(200)
+        self.comboBox_pricecrypto = QtWidgets.QComboBox(self.Pricecrypto)
+        self.comboBox_pricecrypto.setGeometry(QtCore.QRect(10, 10, 1241, 31))
+        self.comboBox_pricecrypto.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.comboBox_pricecrypto.setStyleSheet("background-color:#ffffff;")
+        self.comboBox_pricecrypto.setObjectName("comboBox_pricecrypto")
+        self.pushButton_updatecrypto = QtWidgets.QPushButton(self.Pricecrypto)
+        self.pushButton_updatecrypto.setGeometry(QtCore.QRect(1260, 10, 141, 31))
+        self.pushButton_updatecrypto.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.pushButton_updatecrypto.setStyleSheet("background-color: rgb(225, 255, 228);")
+        self.pushButton_updatecrypto.setObjectName("pushButton_updatecrypto")
         self.crypto_select.raise_()
-        self.Webview_graphcrypto.raise_()
         self.NewsCrypto.raise_()
+        self.Webview_graphcrypto.raise_()
         self.Webview_spatialcrypto.raise_()
+        self.Pricecrypto.raise_()
         self.Datacrypto.raise_()
         self.AllNewsPage = QtWidgets.QWidget(self.All)
         self.AllNewsPage.setGeometry(QtCore.QRect(30, 80, 1761, 791))
@@ -1317,7 +1842,7 @@ class Ui_MainWindow(object):
         self.pushButton_addstock.setStyleSheet("background-color: rgb(225, 255, 228);")
         self.pushButton_addstock.setObjectName("pushButton_addstock")
         self.lineEdit_addresult = QtWidgets.QLineEdit(self.add_data)
-        self.lineEdit_addresult.setGeometry(QtCore.QRect(480, 370, 113, 20))
+        self.lineEdit_addresult.setGeometry(QtCore.QRect(455, 370, 163, 20))
         self.lineEdit_addresult.setObjectName("lineEdit_addresult")
         self.progressBar = QtWidgets.QProgressBar(self.All)
         self.progressBar.setGeometry(QtCore.QRect(30, 880, 1771, 23))
@@ -1330,10 +1855,10 @@ class Ui_MainWindow(object):
         self.pushButton_add.raise_()
         self.AllNewsPage.raise_()
         self.AddSymbolPage.raise_()
+        self.progressBar.raise_()
         self.NASDAQPage.raise_()
         self.CryptoPage.raise_()
         self.SETPage.raise_()
-        self.progressBar.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1820, 21))
@@ -1436,99 +1961,170 @@ class Ui_MainWindow(object):
         self.pushButton_financial.clicked.connect(self.AddSymbolPage.hide) # type: ignore
         self.pushButton_newsall.clicked.connect(self.AddSymbolPage.hide) # type: ignore
         self.pushButton_add.clicked.connect(self.AddSymbolPage.show) # type: ignore
+        self.pushButton_dataset.clicked.connect(self.Priceset.hide) # type: ignore
+        self.pushButton_priceset.clicked.connect(self.Priceset.show) # type: ignore
+        self.pushButton_fncset.clicked.connect(self.Priceset.hide) # type: ignore
+        self.pushButton_graphset.clicked.connect(self.Priceset.hide) # type: ignore
+        self.pushButton_newsset.clicked.connect(self.Priceset.hide) # type: ignore
+        self.pushButton_spatialset.clicked.connect(self.Priceset.hide) # type: ignore
+        self.pushButton_priceset.clicked.connect(self.Dataset.hide) # type: ignore
+        self.pushButton_priceset.clicked.connect(self.Financeset.hide) # type: ignore
+        self.pushButton_priceset.clicked.connect(self.NewsSet.hide) # type: ignore
+        self.pushButton_priceset.clicked.connect(self.Webview_graphset.hide) # type: ignore
+        self.pushButton_priceset.clicked.connect(self.Webview_spatialset.hide) # type: ignore
+        self.pushButton_datanasdaq.clicked.connect(self.Pricenasdaq.hide) # type: ignore
+        self.pushButton_pricenasdaq.clicked.connect(self.Pricenasdaq.show) # type: ignore
+        self.pushButton_fncnasdaq.clicked.connect(self.Pricenasdaq.hide) # type: ignore
+        self.pushButton_graphnasdaq.clicked.connect(self.Pricenasdaq.hide) # type: ignore
+        self.pushButton_newsnasdaq.clicked.connect(self.Pricenasdaq.hide) # type: ignore
+        self.pushButton_spatialnasdaq.clicked.connect(self.Pricenasdaq.hide) # type: ignore
+        self.pushButton_pricenasdaq.clicked.connect(self.Datanasdaq.hide) # type: ignore
+        self.pushButton_pricenasdaq.clicked.connect(self.Financenasdaq.hide) # type: ignore
+        self.pushButton_pricenasdaq.clicked.connect(self.NewsNasdaq.hide) # type: ignore
+        self.pushButton_pricenasdaq.clicked.connect(self.Webview_graphnasdaq.hide) # type: ignore
+        self.pushButton_pricenasdaq.clicked.connect(self.Webview_spatialnasdaq.hide) # type: ignore
+        self.pushButton_datacrypto.clicked.connect(self.Pricecrypto.hide) # type: ignore
+        self.pushButton_pricecrypto.clicked.connect(self.Pricecrypto.show) # type: ignore
+        self.pushButton_graphcrypto.clicked.connect(self.Pricecrypto.hide) # type: ignore
+        self.pushButton_newscrypto.clicked.connect(self.Pricecrypto.hide) # type: ignore
+        self.pushButton_spatialcrypto.clicked.connect(self.Pricecrypto.hide) # type: ignore
+        self.pushButton_pricecrypto.clicked.connect(self.Datacrypto.hide) # type: ignore
+        self.pushButton_pricecrypto.clicked.connect(self.NewsCrypto.hide) # type: ignore
+        self.pushButton_pricecrypto.clicked.connect(self.Webview_graphcrypto.hide) # type: ignore
+        self.pushButton_pricecrypto.clicked.connect(self.Webview_spatialcrypto.hide) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-#-------------------------------------------------------------------- Add Result
+#-------------------------------------------------------------------- Combobox value
+        self.combobox_SET()
+        self.combobox_NASDAQ()
+        self.combobox_CRYPTO()
+#-------------------------------------------------------------------- Add Stock Result
         self.lineEdit_addresult.setReadOnly(True)
+        self.pushButton_addstock.clicked.connect(self.addStock)
 #-------------------------------------------------------------------- Load All News
         self.load_newsall()
-#-------------------------------------------------------------------- Load All Data SET
+#-------------------------------------------------------------------- Load All Data
         self.load_dataset_all()
-#-------------------------------------------------------------------- Load All Data NASDAQ
         self.load_datanasdaq_all()
-#-------------------------------------------------------------------- Load All Data CRYPTO
         self.load_datacrypto_all()
-#-------------------------------------------------------------------- Load All Fnc SET
+#-------------------------------------------------------------------- Load All Fnc
         self.load_fncset_all()
-#-------------------------------------------------------------------- Load All Fnc NASDAQ
         self.load_fncnasdaq_all()
+#-------------------------------------------------------------------- Load All Price
+        self.load_priceset()
+        self.load_pricenasdaq()
+        self.load_pricecrypto()
 #------------------------------------------------------------------------- WebEngine_SET
-        self.WebEngine_set = QtWebEngineWidgets.QWebEngineView(self.Webview_graphset)
-        self.WebEngine_set.setGeometry(QtCore.QRect(0, 0, 1411, 791))
+        self.WebEngine_set = QtWebEngineWidgets.QWebEngineView(self.plotGraphSet)
+        self.WebEngine_set.setGeometry(QtCore.QRect(0, 0, 1411, 721))
         self.WebEngine_set.setMaximumSize(QtCore.QSize(1411, 16777215))
         self.WebEngine_set.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.WebEngine_set.setObjectName("WebEngine_set")
-        self.WebEngine_set.load(QtCore.QUrl("http://127.0.0.1:1000/"))
+        self.comboBox_timeframeset.currentIndexChanged.connect(self.plot_set)
 #------------------------------------------------------------------------- WebEngine_NASDAQ
-        self.WebEngine_nasdaq = QtWebEngineWidgets.QWebEngineView(self.Webview_graphnasdaq)
-        self.WebEngine_nasdaq.setGeometry(QtCore.QRect(0, 0, 1411, 791))
+        self.WebEngine_nasdaq = QtWebEngineWidgets.QWebEngineView(self.plotGraphNasdaq)
+        self.WebEngine_nasdaq.setGeometry(QtCore.QRect(0, 0, 1411, 721))
         self.WebEngine_nasdaq.setMaximumSize(QtCore.QSize(1411, 16777215))
         self.WebEngine_nasdaq.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.WebEngine_nasdaq.setObjectName("WebEngine_nasdaq")
-        self.WebEngine_nasdaq.load(QtCore.QUrl("http://127.0.0.1:2000/"))
+        self.comboBox_timeframenasdaq.currentIndexChanged.connect(self.plot_nasdaq)
 #------------------------------------------------------------------------- WebEngine_Crypto
-        self.WebEngine_crypto = QtWebEngineWidgets.QWebEngineView(self.Webview_graphcrypto)
-        self.WebEngine_crypto.setGeometry(QtCore.QRect(0, 0, 1411, 791))
+        self.WebEngine_crypto = QtWebEngineWidgets.QWebEngineView(self.plotGraphCrypto)
+        self.WebEngine_crypto.setGeometry(QtCore.QRect(0, 0, 1411, 721))
         self.WebEngine_crypto.setMaximumSize(QtCore.QSize(1411, 16777215))
         self.WebEngine_crypto.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.WebEngine_crypto.setObjectName("WebEngine_crypto")
-        self.WebEngine_crypto.load(QtCore.QUrl("http://127.0.0.1:3000/"))
+        self.comboBox_timeframecrypto.currentIndexChanged.connect(self.plot_crypto)
 #----------------------------------------------------------------- Combobox Search Data Set
         self.comboBox_dataset.setEditable(True)
         self.comboBox_dataset.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
         self.comboBox_dataset.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
-        self.comboBox_dataset.currentIndexChanged.connect(self.load_dataset)
         self.comboBox_dataset.currentIndexChanged.connect(self.comboBox_fncset.setCurrentIndex)
         self.comboBox_dataset.currentIndexChanged.connect(self.comboBox_newsset.setCurrentIndex)
+        self.comboBox_dataset.currentIndexChanged.connect(self.comboBox_priceset.setCurrentIndex)
+        self.comboBox_dataset.currentIndexChanged.connect(self.load_dataset)
+        self.comboBox_dataset.currentIndexChanged.connect(self.plot_set)
 #----------------------------------------------------------------- Combobox Search Data Nasdaq
         self.comboBox_datanasdaq.setEditable(True)
         self.comboBox_datanasdaq.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
         self.comboBox_datanasdaq.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
-        self.comboBox_datanasdaq.currentIndexChanged.connect(self.load_datanasdaq)
         self.comboBox_datanasdaq.currentIndexChanged.connect(self.comboBox_fncnasdaq.setCurrentIndex)
         self.comboBox_datanasdaq.currentIndexChanged.connect(self.comboBox_newsnasdaq.setCurrentIndex)
+        self.comboBox_datanasdaq.currentIndexChanged.connect(self.comboBox_pricenasdaq.setCurrentIndex)
+        self.comboBox_datanasdaq.currentIndexChanged.connect(self.load_datanasdaq)
+        self.comboBox_datanasdaq.currentIndexChanged.connect(self.plot_nasdaq)
 #----------------------------------------------------------------- Combobox Search Data Crypto
         self.comboBox_datacrypto.setEditable(True)
         self.comboBox_datacrypto.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
         self.comboBox_datacrypto.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
-        self.comboBox_datacrypto.currentIndexChanged.connect(self.load_datacrypto)
         self.comboBox_datacrypto.currentIndexChanged.connect(self.comboBox_newscrypto.setCurrentIndex)
+        self.comboBox_datacrypto.currentIndexChanged.connect(self.comboBox_pricecrypto.setCurrentIndex)
+        self.comboBox_datacrypto.currentIndexChanged.connect(self.load_datacrypto)
+        self.comboBox_datacrypto.currentIndexChanged.connect(self.plot_crypto)
+#----------------------------------------------------------------- Combobox Price Set
+        self.comboBox_priceset.setEditable(True)
+        self.comboBox_priceset.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
+        self.comboBox_priceset.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
+        self.comboBox_priceset.currentIndexChanged.connect(self.comboBox_fncset.setCurrentIndex)
+        self.comboBox_priceset.currentIndexChanged.connect(self.comboBox_newsset.setCurrentIndex)
+        self.comboBox_priceset.currentIndexChanged.connect(self.comboBox_dataset.setCurrentIndex)
+        self.comboBox_priceset.currentIndexChanged.connect(self.load_priceset)
+#----------------------------------------------------------------- Combobox Price Nasdaq
+        self.comboBox_pricenasdaq.setEditable(True)
+        self.comboBox_pricenasdaq.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
+        self.comboBox_pricenasdaq.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
+        self.comboBox_pricenasdaq.currentIndexChanged.connect(self.comboBox_fncnasdaq.setCurrentIndex)
+        self.comboBox_pricenasdaq.currentIndexChanged.connect(self.comboBox_newsnasdaq.setCurrentIndex)
+        self.comboBox_pricenasdaq.currentIndexChanged.connect(self.comboBox_datanasdaq.setCurrentIndex)
+        self.comboBox_pricenasdaq.currentIndexChanged.connect(self.load_pricenasdaq)
+#----------------------------------------------------------------- Combobox Price Crypto
+        self.comboBox_pricecrypto.setEditable(True)
+        self.comboBox_pricecrypto.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
+        self.comboBox_pricecrypto.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
+        self.comboBox_pricecrypto.currentIndexChanged.connect(self.comboBox_newscrypto.setCurrentIndex)
+        self.comboBox_pricecrypto.currentIndexChanged.connect(self.comboBox_datacrypto.setCurrentIndex)
+        self.comboBox_pricecrypto.currentIndexChanged.connect(self.load_pricecrypto)
 #----------------------------------------------------------------- Combobox Search Fnc Set
         self.comboBox_fncset.setEditable(True)
         self.comboBox_fncset.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
         self.comboBox_fncset.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
-        self.comboBox_fncset.currentIndexChanged.connect(self.load_fncset)
         self.comboBox_fncset.currentIndexChanged.connect(self.comboBox_dataset.setCurrentIndex)
         self.comboBox_fncset.currentIndexChanged.connect(self.comboBox_newsset.setCurrentIndex)
+        self.comboBox_fncset.currentIndexChanged.connect(self.comboBox_priceset.setCurrentIndex)
+        self.comboBox_fncset.currentIndexChanged.connect(self.load_fncset)
 #----------------------------------------------------------------- Combobox Search Fnc Nasdaq
         self.comboBox_fncnasdaq.setEditable(True)
         self.comboBox_fncnasdaq.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
         self.comboBox_fncnasdaq.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
-        self.comboBox_fncnasdaq.currentIndexChanged.connect(self.load_fncnasdaq)
         self.comboBox_fncnasdaq.currentIndexChanged.connect(self.comboBox_datanasdaq.setCurrentIndex)
         self.comboBox_fncnasdaq.currentIndexChanged.connect(self.comboBox_newsnasdaq.setCurrentIndex)
+        self.comboBox_fncnasdaq.currentIndexChanged.connect(self.comboBox_pricenasdaq.setCurrentIndex)
+        self.comboBox_fncnasdaq.currentIndexChanged.connect(self.load_fncnasdaq)
 #----------------------------------------------------------------- Combobox Search News Set
         self.comboBox_newsset.setEditable(True)
         self.comboBox_newsset.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
         self.comboBox_newsset.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
-        self.comboBox_newsset.currentIndexChanged.connect(self.load_newsset)
         self.comboBox_newsset.currentIndexChanged.connect(self.comboBox_dataset.setCurrentIndex)
         self.comboBox_newsset.currentIndexChanged.connect(self.comboBox_fncset.setCurrentIndex)
+        self.comboBox_newsset.currentIndexChanged.connect(self.comboBox_priceset.setCurrentIndex)
+        self.comboBox_newsset.currentIndexChanged.connect(self.load_newsset)
         self.comboBox_newsset.currentIndexChanged.connect(self.spatial_newsset)
 #----------------------------------------------------------------- Combobox Search News Nasdaq
         self.comboBox_newsnasdaq.setEditable(True)
         self.comboBox_newsnasdaq.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
         self.comboBox_newsnasdaq.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
-        self.comboBox_newsnasdaq.currentIndexChanged.connect(self.load_newsnasdaq)
         self.comboBox_newsnasdaq.currentIndexChanged.connect(self.comboBox_datanasdaq.setCurrentIndex)
         self.comboBox_newsnasdaq.currentIndexChanged.connect(self.comboBox_fncnasdaq.setCurrentIndex)
+        self.comboBox_newsnasdaq.currentIndexChanged.connect(self.comboBox_pricenasdaq.setCurrentIndex)
+        self.comboBox_newsnasdaq.currentIndexChanged.connect(self.load_newsnasdaq)
         self.comboBox_newsnasdaq.currentIndexChanged.connect(self.spatial_newsnasdaq)
 #----------------------------------------------------------------- Combobox Search News Crypto
         self.comboBox_newscrypto.setEditable(True)
         self.comboBox_newscrypto.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
         self.comboBox_newscrypto.completer().setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
-        self.comboBox_newscrypto.currentIndexChanged.connect(self.load_newscrypto)
         self.comboBox_newscrypto.currentIndexChanged.connect(self.comboBox_datacrypto.setCurrentIndex)
+        self.comboBox_newscrypto.currentIndexChanged.connect(self.comboBox_pricecrypto.setCurrentIndex)
+        self.comboBox_newscrypto.currentIndexChanged.connect(self.load_newscrypto)
         self.comboBox_newscrypto.currentIndexChanged.connect(self.spatial_newscrypto)
 #----------------------------------------------------------------- Combobox Time News    
         self.comboBox_timenewsall.currentIndexChanged.connect(self.load_newsall)
@@ -1567,6 +2163,7 @@ class Ui_MainWindow(object):
 
 
 
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -1576,6 +2173,7 @@ class Ui_MainWindow(object):
         self.pushButton_newsall.setText(_translate("MainWindow", "News All"))
         self.pushButton_add.setText(_translate("MainWindow", "Add Symbol"))
         self.pushButton_dataset.setText(_translate("MainWindow", "Data"))
+        self.pushButton_priceset.setText(_translate("MainWindow", "Price"))
         self.pushButton_fncset.setText(_translate("MainWindow", "Financial"))
         self.pushButton_graphset.setText(_translate("MainWindow", "Graph"))
         self.pushButton_newsset.setText(_translate("MainWindow", "News"))
@@ -1604,7 +2202,6 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Industry"))
         item = self.tableWidget_searchset.horizontalHeaderItem(5)
         item.setText(_translate("MainWindow", "Description"))
-        self.pushButton_updateset.setText(_translate("MainWindow", "Update"))
         item = self.tableWidget_fncset.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Asset"))
         item = self.tableWidget_fncset.horizontalHeaderItem(1)
@@ -1642,6 +2239,11 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Period"))
         item = self.tableWidget_searchfncset.horizontalHeaderItem(8)
         item.setText(_translate("MainWindow", "Symbol"))
+        self.comboBox_timeframeset.setItemText(0, _translate("MainWindow", "Hour"))
+        self.comboBox_timeframeset.setItemText(1, _translate("MainWindow", "Day"))
+        self.comboBox_timeframeset.setItemText(2, _translate("MainWindow", "3 Days"))
+        self.comboBox_timeframeset.setItemText(3, _translate("MainWindow", "Weekly"))
+        self.comboBox_timeframeset.setItemText(4, _translate("MainWindow", "Monthly"))
         item = self.tableWidget_newsset.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Date"))
         item = self.tableWidget_newsset.horizontalHeaderItem(1)
@@ -1658,7 +2260,23 @@ class Ui_MainWindow(object):
         self.comboBox_timenewsset.setItemText(2, _translate("MainWindow", "3 Days"))
         self.comboBox_timenewsset.setItemText(3, _translate("MainWindow", "Weekly"))
         self.comboBox_timenewsset.setItemText(4, _translate("MainWindow", "Monthly"))
+        item = self.tableWidget_priceset.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Date"))
+        item = self.tableWidget_priceset.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Open"))
+        item = self.tableWidget_priceset.horizontalHeaderItem(2)
+        item.setText(_translate("MainWindow", "High"))
+        item = self.tableWidget_priceset.horizontalHeaderItem(3)
+        item.setText(_translate("MainWindow", "Low"))
+        item = self.tableWidget_priceset.horizontalHeaderItem(4)
+        item.setText(_translate("MainWindow", "Close"))
+        item = self.tableWidget_priceset.horizontalHeaderItem(5)
+        item.setText(_translate("MainWindow", "Volume"))
+        item = self.tableWidget_priceset.horizontalHeaderItem(6)
+        item.setText(_translate("MainWindow", "Symbol"))
+        self.pushButton_updateset.setText(_translate("MainWindow", "Update"))
         self.pushButton_datanasdaq.setText(_translate("MainWindow", "Data"))
+        self.pushButton_pricenasdaq.setText(_translate("MainWindow", "Price"))
         self.pushButton_fncnasdaq.setText(_translate("MainWindow", "Financial"))
         self.pushButton_graphnasdaq.setText(_translate("MainWindow", "Graph"))
         self.pushButton_newsnasdaq.setText(_translate("MainWindow", "News"))
@@ -1683,7 +2301,6 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Sector"))
         item = self.tableWidget_searchnasdaq.horizontalHeaderItem(4)
         item.setText(_translate("MainWindow", "Industry"))
-        self.pushButton_updatenasdaq.setText(_translate("MainWindow", "Update"))
         item = self.tableWidget_fncnasdaq.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Asset"))
         item = self.tableWidget_fncnasdaq.horizontalHeaderItem(1)
@@ -1721,6 +2338,11 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Period"))
         item = self.tableWidget_searchfncnasdaq.horizontalHeaderItem(8)
         item.setText(_translate("MainWindow", "Symbol"))
+        self.comboBox_timeframenasdaq.setItemText(0, _translate("MainWindow", "Hour"))
+        self.comboBox_timeframenasdaq.setItemText(1, _translate("MainWindow", "Day"))
+        self.comboBox_timeframenasdaq.setItemText(2, _translate("MainWindow", "3 Days"))
+        self.comboBox_timeframenasdaq.setItemText(3, _translate("MainWindow", "Weekly"))
+        self.comboBox_timeframenasdaq.setItemText(4, _translate("MainWindow", "Monthly"))
         item = self.tableWidget_newsnasdaq.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Date"))
         item = self.tableWidget_newsnasdaq.horizontalHeaderItem(1)
@@ -1737,7 +2359,23 @@ class Ui_MainWindow(object):
         self.comboBox_timenewsnasdaq.setItemText(2, _translate("MainWindow", "3 Days"))
         self.comboBox_timenewsnasdaq.setItemText(3, _translate("MainWindow", "Weekly"))
         self.comboBox_timenewsnasdaq.setItemText(4, _translate("MainWindow", "Monthly"))
+        item = self.tableWidget_pricenasdaq.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Date"))
+        item = self.tableWidget_pricenasdaq.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Open"))
+        item = self.tableWidget_pricenasdaq.horizontalHeaderItem(2)
+        item.setText(_translate("MainWindow", "High"))
+        item = self.tableWidget_pricenasdaq.horizontalHeaderItem(3)
+        item.setText(_translate("MainWindow", "Low"))
+        item = self.tableWidget_pricenasdaq.horizontalHeaderItem(4)
+        item.setText(_translate("MainWindow", "Close"))
+        item = self.tableWidget_pricenasdaq.horizontalHeaderItem(5)
+        item.setText(_translate("MainWindow", "Volume"))
+        item = self.tableWidget_pricenasdaq.horizontalHeaderItem(6)
+        item.setText(_translate("MainWindow", "Symbol"))
+        self.pushButton_updatenasdaq.setText(_translate("MainWindow", "Update"))
         self.pushButton_datacrypto.setText(_translate("MainWindow", "Data"))
+        self.pushButton_pricecrypto.setText(_translate("MainWindow", "Price"))
         self.pushButton_graphcrypto.setText(_translate("MainWindow", "Graph"))
         self.pushButton_newscrypto.setText(_translate("MainWindow", "News"))
         self.pushButton_spatialcrypto.setText(_translate("MainWindow", "Spatial"))
@@ -1753,7 +2391,11 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "Name"))
         item = self.tableWidget_searchcrypto.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", "Market"))
-        self.pushButton_updatecrypto.setText(_translate("MainWindow", "Update"))
+        self.comboBox_timeframecrypto.setItemText(0, _translate("MainWindow", "Hour"))
+        self.comboBox_timeframecrypto.setItemText(1, _translate("MainWindow", "Day"))
+        self.comboBox_timeframecrypto.setItemText(2, _translate("MainWindow", "3 Days"))
+        self.comboBox_timeframecrypto.setItemText(3, _translate("MainWindow", "Weekly"))
+        self.comboBox_timeframecrypto.setItemText(4, _translate("MainWindow", "Monthly"))
         item = self.tableWidget_newscrypto.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Date"))
         item = self.tableWidget_newscrypto.horizontalHeaderItem(1)
@@ -1770,6 +2412,21 @@ class Ui_MainWindow(object):
         self.comboBox_timenewscrypto.setItemText(2, _translate("MainWindow", "3 Days"))
         self.comboBox_timenewscrypto.setItemText(3, _translate("MainWindow", "Weekly"))
         self.comboBox_timenewscrypto.setItemText(4, _translate("MainWindow", "Monthly"))
+        item = self.tableWidget_pricecrypto.horizontalHeaderItem(0)
+        item.setText(_translate("MainWindow", "Date"))
+        item = self.tableWidget_pricecrypto.horizontalHeaderItem(1)
+        item.setText(_translate("MainWindow", "Open"))
+        item = self.tableWidget_pricecrypto.horizontalHeaderItem(2)
+        item.setText(_translate("MainWindow", "High"))
+        item = self.tableWidget_pricecrypto.horizontalHeaderItem(3)
+        item.setText(_translate("MainWindow", "Low"))
+        item = self.tableWidget_pricecrypto.horizontalHeaderItem(4)
+        item.setText(_translate("MainWindow", "Close"))
+        item = self.tableWidget_pricecrypto.horizontalHeaderItem(5)
+        item.setText(_translate("MainWindow", "Volume"))
+        item = self.tableWidget_pricecrypto.horizontalHeaderItem(6)
+        item.setText(_translate("MainWindow", "Symbol"))
+        self.pushButton_updatecrypto.setText(_translate("MainWindow", "Update"))
         item = self.tableWidget_allnews.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Date"))
         item = self.tableWidget_allnews.horizontalHeaderItem(1)
@@ -1790,6 +2447,10 @@ class Ui_MainWindow(object):
         self.comboBox_marketstock.setItemText(1, _translate("MainWindow", "NASDAQ"))
         self.comboBox_marketstock.setItemText(2, _translate("MainWindow", "CRYPTO"))
         self.pushButton_addstock.setText(_translate("MainWindow", "Submit"))
+
+
+
+
 
 #------------------------------------------------------------------ Column Width Datanasdaq
         self.tableWidget_datanasdaq.setColumnWidth(1, 350)
@@ -1831,43 +2492,11 @@ class Ui_MainWindow(object):
         self.tableWidget_allnews.setColumnWidth(4, 200)
 
 
-#------------------------------------------------------ Name of Stock and Crypto
-def combobox_SET():
-    conn = sqlite3.connect(r'C:\Users\Admin\Desktop\SOFTDEV2\SOFTWARE-DEVELOPMENT-2\share_V3.sqlite')
-    cursor = conn.cursor()
-    cursor.execute("""SELECT Symbol FROM Information WHERE MarketId = 1 ORDER BY Symbol ASC""")
-    result = cursor.fetchall()
-    values = [item[0] for item in result]
-    return values
-def combobox_NASDAQ():
-    conn = sqlite3.connect(r'C:\Users\Admin\Desktop\SOFTDEV2\SOFTWARE-DEVELOPMENT-2\share_V3.sqlite')
-    cursor = conn.cursor()
-    cursor.execute("""SELECT Symbol FROM Information WHERE MarketId = 2 ORDER BY Symbol ASC""")
-    result = cursor.fetchall()
-    values = [item[0] for item in result]
-    return values
-def combobox_CRYPTO():
-    conn = sqlite3.connect(r'C:\Users\Admin\Desktop\SOFTDEV2\SOFTWARE-DEVELOPMENT-2\share_V3.sqlite')
-    cursor = conn.cursor()
-    cursor.execute("""SELECT Symbol FROM Information WHERE MarketId = 3 ORDER BY Symbol ASC""")
-    result = cursor.fetchall()
-    values = [item[0] for item in result]
-    return values
-
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
-#------------------------------------------------------- Set Value Combobox
-    ui.comboBox_dataset.addItems(combobox_SET())
-    ui.comboBox_fncset.addItems(combobox_SET())
-    ui.comboBox_newsset.addItems(combobox_SET())
-    ui.comboBox_datanasdaq.addItems(combobox_NASDAQ())
-    ui.comboBox_fncnasdaq.addItems(combobox_NASDAQ())
-    ui.comboBox_newsnasdaq.addItems(combobox_NASDAQ())
-    ui.comboBox_datacrypto.addItems(combobox_CRYPTO())
-    ui.comboBox_newscrypto.addItems(combobox_CRYPTO())
     MainWindow.show()
     sys.exit(app.exec_())

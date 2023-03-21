@@ -931,9 +931,9 @@ class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1820, 941)
+        MainWindow.resize(1820, 920)
         MainWindow.setMinimumSize(QtCore.QSize(1820, 920))
-        MainWindow.setMaximumSize(QtCore.QSize(1820, 961))
+        MainWindow.setMaximumSize(QtCore.QSize(1820, 920))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setMinimumSize(QtCore.QSize(1820, 920))
         self.centralwidget.setMaximumSize(QtCore.QSize(1820, 920))

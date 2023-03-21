@@ -31,7 +31,7 @@ class UpdatePriceThread(QThread):
             Update_Stock(self.stock_type).UpdatePiceDays(f'{self.selected_item}')
             progress += 34
             self.updateProgress.emit(progress)
-            time.sleep(0.5)
+            time.sleep(0.25)
         self.finished.emit()
 
 class UpdateFncThread(QThread):
@@ -50,7 +50,7 @@ class UpdateFncThread(QThread):
             Update_Stock(self.stock_type).updateFinancial(driver, f'{self.selected_item}')
             progress += 50
             self.updateProgress.emit(progress)
-            time.sleep(0.5)
+            time.sleep(0.25)
         self.finished.emit()
 
 class UpdateNewsThread(QThread):
@@ -68,11 +68,11 @@ class UpdateNewsThread(QThread):
             Update_Stock(self.stock_type).UpdateNews(f'{self.selected_item}')
             progress += 50
             self.updateProgress.emit(progress)
-            time.sleep(0.5)
+            time.sleep(0.25)
         self.finished.emit()
 
 class AddStockSymbol(QThread):
-    finished = pyqtSignal()
+    finished = pyqtSignal(str)
     updateProgress = pyqtSignal(int)
     def __init__(self, selected_item, selected_text):
         super().__init__()
@@ -83,16 +83,47 @@ class AddStockSymbol(QThread):
         while progress < 100:
             progress += 50
             self.updateProgress.emit(progress)
-            Update_Stock(f'{self.stock_type}').add_new_symbol(f'{self.stock_text}')
+            result = Update_Stock(f'{self.stock_type}').add_new_symbol(f'{self.stock_text}')
             progress += 50
             self.updateProgress.emit(progress)
-            time.sleep(0.5)
-        self.finished.emit()
+            time.sleep(0.25)
+        self.finished.emit(result)
 
 
 class Ui_MainWindow(object):
     def __init__(self) :
         self.location_db = r'C:\Users\Admin\Desktop\SOFTDEV2\SOFTWARE-DEVELOPMENT-2\share_V3.sqlite'
+
+#------------------------------------------------------ Name of Stock and Crypto
+    def combobox_SET(self):
+        conn = sqlite3.connect(self.location_db)
+        cursor = conn.cursor()
+        cursor.execute("""SELECT Symbol FROM Information WHERE MarketId = 1 ORDER BY Symbol ASC""")
+        result = cursor.fetchall()
+        values = [item[0] for item in result]
+        self.comboBox_dataset.addItems(values)
+        self.comboBox_fncset.addItems(values)
+        self.comboBox_newsset.addItems(values)
+        self.comboBox_priceset.addItems(values)
+    def combobox_NASDAQ(self):
+        conn = sqlite3.connect(self.location_db)
+        cursor = conn.cursor()
+        cursor.execute("""SELECT Symbol FROM Information WHERE MarketId = 2 ORDER BY Symbol ASC""")
+        result = cursor.fetchall()
+        values = [item[0] for item in result]
+        self.comboBox_datanasdaq.addItems(values)
+        self.comboBox_fncnasdaq.addItems(values)
+        self.comboBox_newsnasdaq.addItems(values)
+        self.comboBox_pricenasdaq.addItems(values)
+    def combobox_CRYPTO(self):
+        conn = sqlite3.connect(self.location_db)
+        cursor = conn.cursor()
+        cursor.execute("""SELECT Symbol FROM Information WHERE MarketId = 3 ORDER BY Symbol ASC""")
+        result = cursor.fetchall()
+        values = [item[0] for item in result]
+        self.comboBox_datacrypto.addItems(values)
+        self.comboBox_newscrypto.addItems(values)
+        self.comboBox_pricecrypto.addItems(values)
 #---------------------------------------------------------------- Load Data All
     def load_dataset_all(self):
         conn = sqlite3.connect(self.location_db)
@@ -187,10 +218,10 @@ class Ui_MainWindow(object):
         selected_item = self.comboBox_datanasdaq.currentText()
         conn = sqlite3.connect(self.location_db)
         sqlquery = f"""SELECT DISTINCT i.Symbol,i.Sname,m.Mname,s.Full_Sector,ind.Full_Industry FROM Information as i
-                        INNER JOIN Category as c ON c.SymbolId = i.SymbolId
-                        INNER JOIN Sector as s ON c.SectorId = s.SectorId
-                        INNER JOIN Industry as ind ON c.IndustryId = ind.IndustryId
-                        INNER JOIN Market as m ON m.MarketId = i.MarketId
+                        LEFT JOIN Category as c ON c.SymbolId = i.SymbolId
+                        LEFT JOIN Sector as s ON c.SectorId = s.SectorId
+                        LEFT JOIN Industry as ind ON c.IndustryId = ind.IndustryId
+                        LEFT JOIN Market as m ON m.MarketId = i.MarketId
                         WHERE i.Symbol = '{str(selected_item)}';"""
         result = conn.execute(sqlquery)
         self.tableWidget_searchnasdaq.setRowCount(0)
@@ -561,7 +592,7 @@ class Ui_MainWindow(object):
     def plot_set(self):
         selected_item = self.comboBox_dataset.currentText()
         selected_time = self.comboBox_timeframeset.currentText()
-        time.sleep(0.5)
+        time.sleep(0.25)
         conn = sqlite3.connect(self.location_db)
         df_day = pd.read_sql(f"""SELECT spd."Date", spd.Open, spd.High, spd.Low, spd.Close, spd."Adj Close", spd.Volume, i.Symbol 
                             FROM Stock_price_day as spd 
@@ -645,7 +676,7 @@ class Ui_MainWindow(object):
     def plot_nasdaq(self):
         selected_item = self.comboBox_datanasdaq.currentText()
         selected_time = self.comboBox_timeframenasdaq.currentText()
-        time.sleep(0.5)
+        time.sleep(0.25)
         conn = sqlite3.connect(self.location_db)
         df_day = pd.read_sql(f"""SELECT spd."Date", spd.Open, spd.High, spd.Low, spd.Close, spd."Adj Close", spd.Volume, i.Symbol 
                             FROM Stock_price_day as spd 
@@ -728,7 +759,7 @@ class Ui_MainWindow(object):
     def plot_crypto(self):
         selected_item = self.comboBox_datacrypto.currentText()
         selected_time = self.comboBox_timeframecrypto.currentText()
-        time.sleep(0.5)
+        time.sleep(0.25)
         conn = sqlite3.connect(self.location_db)
         df_day = pd.read_sql(f"""SELECT spd."Date", spd.Open, spd.High, spd.Low, spd.Close, spd."Adj Close", spd.Volume, i.Symbol 
                             FROM Stock_price_day as spd 
@@ -886,19 +917,23 @@ class Ui_MainWindow(object):
         selected_market = self.comboBox_marketstock.currentText()
         self.addStockThread = AddStockSymbol(selected_market, selected_text)
         self.addStockThread.updateProgress.connect(self.progressBar.setValue)
+        self.addStockThread.finished.connect(self.lineEdit_addresult.setText)
         self.addStockThread.start()
         self.pushButton_addstock.setEnabled(False)
         self.addStockThread.finished.connect(lambda: self.pushButton_addstock.setEnabled(True))
-
-
-
+        self.addStockThread.finished.connect(self.load_dataset_all)
+        self.addStockThread.finished.connect(self.load_datanasdaq_all)
+        self.addStockThread.finished.connect(self.load_datacrypto_all)
+        self.addStockThread.finished.connect(self.combobox_SET)
+        self.addStockThread.finished.connect(self.combobox_NASDAQ)
+        self.addStockThread.finished.connect(self.combobox_CRYPTO)
 
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1820, 941)
+        MainWindow.resize(1820, 920)
         MainWindow.setMinimumSize(QtCore.QSize(1820, 920))
-        MainWindow.setMaximumSize(QtCore.QSize(1820, 961))
+        MainWindow.setMaximumSize(QtCore.QSize(1820, 920))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setMinimumSize(QtCore.QSize(1820, 920))
         self.centralwidget.setMaximumSize(QtCore.QSize(1820, 920))
@@ -1807,7 +1842,7 @@ class Ui_MainWindow(object):
         self.pushButton_addstock.setStyleSheet("background-color: rgb(225, 255, 228);")
         self.pushButton_addstock.setObjectName("pushButton_addstock")
         self.lineEdit_addresult = QtWidgets.QLineEdit(self.add_data)
-        self.lineEdit_addresult.setGeometry(QtCore.QRect(480, 370, 113, 20))
+        self.lineEdit_addresult.setGeometry(QtCore.QRect(455, 370, 163, 20))
         self.lineEdit_addresult.setObjectName("lineEdit_addresult")
         self.progressBar = QtWidgets.QProgressBar(self.All)
         self.progressBar.setGeometry(QtCore.QRect(30, 880, 1771, 23))
@@ -1959,6 +1994,10 @@ class Ui_MainWindow(object):
         self.pushButton_pricecrypto.clicked.connect(self.Webview_spatialcrypto.hide) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+#-------------------------------------------------------------------- Combobox value
+        self.combobox_SET()
+        self.combobox_NASDAQ()
+        self.combobox_CRYPTO()
 #-------------------------------------------------------------------- Add Stock Result
         self.lineEdit_addresult.setReadOnly(True)
         self.pushButton_addstock.clicked.connect(self.addStock)
@@ -2453,46 +2492,11 @@ class Ui_MainWindow(object):
         self.tableWidget_allnews.setColumnWidth(4, 200)
 
 
-#------------------------------------------------------ Name of Stock and Crypto
-def combobox_SET():
-    conn = sqlite3.connect(r'C:\Users\Admin\Desktop\SOFTDEV2\SOFTWARE-DEVELOPMENT-2\share_V3.sqlite')
-    cursor = conn.cursor()
-    cursor.execute("""SELECT Symbol FROM Information WHERE MarketId = 1 ORDER BY Symbol ASC""")
-    result = cursor.fetchall()
-    values = [item[0] for item in result]
-    return values
-def combobox_NASDAQ():
-    conn = sqlite3.connect(r'C:\Users\Admin\Desktop\SOFTDEV2\SOFTWARE-DEVELOPMENT-2\share_V3.sqlite')
-    cursor = conn.cursor()
-    cursor.execute("""SELECT Symbol FROM Information WHERE MarketId = 2 ORDER BY Symbol ASC""")
-    result = cursor.fetchall()
-    values = [item[0] for item in result]
-    return values
-def combobox_CRYPTO():
-    conn = sqlite3.connect(r'C:\Users\Admin\Desktop\SOFTDEV2\SOFTWARE-DEVELOPMENT-2\share_V3.sqlite')
-    cursor = conn.cursor()
-    cursor.execute("""SELECT Symbol FROM Information WHERE MarketId = 3 ORDER BY Symbol ASC""")
-    result = cursor.fetchall()
-    values = [item[0] for item in result]
-    return values
-
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
-#------------------------------------------------------- Set Value Combobox
-    ui.comboBox_dataset.addItems(combobox_SET())
-    ui.comboBox_fncset.addItems(combobox_SET())
-    ui.comboBox_newsset.addItems(combobox_SET())
-    ui.comboBox_priceset.addItems(combobox_SET())
-    ui.comboBox_datanasdaq.addItems(combobox_NASDAQ())
-    ui.comboBox_fncnasdaq.addItems(combobox_NASDAQ())
-    ui.comboBox_newsnasdaq.addItems(combobox_NASDAQ())
-    ui.comboBox_pricenasdaq.addItems(combobox_NASDAQ())
-    ui.comboBox_datacrypto.addItems(combobox_CRYPTO())
-    ui.comboBox_newscrypto.addItems(combobox_CRYPTO())
-    ui.comboBox_pricecrypto.addItems(combobox_CRYPTO())
     MainWindow.show()
     sys.exit(app.exec_())

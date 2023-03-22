@@ -1,0 +1,301 @@
+Symbol,Name
+BTC,Bitcoin
+ETH,Ethereum
+USDT,Tether
+BNB,BNB
+USDC,USD Coin
+XRP,XRP
+ADA,Cardano
+BUSD,Binance USD
+MATIC,Polygon
+DOGE,Dogecoin
+SOL,Solana
+DOT,Polkadot
+SHIB,Shiba Inu
+LTC,Litecoin
+TRX,TRON
+AVAX,Avalanche
+UNI,Uniswap
+DAI,Dai
+WBTC,Wrapped Bitcoin
+ATOM,Cosmos
+LINK,Chainlink
+FIL,Filecoin
+LEO,UNUS SED LEO
+ETC,Ethereum Classic
+OKB,OKB
+XMR,Monero
+TON,Toncoin
+BCH,Bitcoin Cash
+LDO,Lido DAO
+XLM,Stellar
+HBAR,Hedera
+APT,Aptos
+ICP,Internet Computer
+NEAR,NEAR Protocol
+VET,VeChain
+APE,ApeCoin
+CRO,Cronos
+ALGO,Algorand
+QNT,Quant
+GRT,The Graph
+FTM,Fantom
+EOS,EOS
+FLOW,Flow
+MANA,Decentraland
+EGLD,MultiversX
+AAVE,Aave
+BIT,BitDAO
+AXS,Axie Infinity
+THETA,Theta Network
+SAND,The Sandbox
+XTZ,Tezos
+RPL,Rocket Pool
+LUNC,Terra Classic
+TUSD,TrueUSD
+CHZ,Chiliz
+KLAY,Klaytn
+CRV,Curve DAO Token
+KCS,KuCoin Token
+MINA,Mina
+USDP,Pax Dollar
+IMX,ImmutableX
+HT,Huobi Token
+BSV,Bitcoin SV
+FXS,Frax Share
+CAKE,PancakeSwap
+DASH,Dash
+ZEC,Zcash
+NEO,Neo
+MKR,Maker
+USDD,USDD
+MIOTA,IOTA
+XEC,eCash
+BTT,BitTorrent-New
+GMX,GMX
+SNX,Synthetix
+OP,Optimism
+TWT,Trust Wallet Token
+GUSD,Gemini Dollar
+LRC,Loopring
+RUNE,THORChain
+STX,Stacks
+OSMO,Osmosis
+ZIL,Zilliqa
+BLUR,Blur
+AGIX,SingularityNET
+BNX,BinaryX
+GT,GateToken
+ENJ,Enjin Coin
+PAXG,PAX Gold
+CVX,Convex Finance
+DYDX,dYdX
+1INCH,1inch Network
+RNDR,Render Token
+BAT,Basic Attention Token
+AR,Arweave
+ETHW,EthereumPoW
+ASTR,Astar
+WOO,WOO Network
+ROSE,Oasis Network
+COMP,Compound
+CSPR,Casper
+FEI,Fei USD
+NEXO,Nexo
+MAGIC,MAGIC
+LUNA,Terra
+HNT,Helium
+CELO,Celo
+KSM,Kusama
+KAVA,Kava
+RVN,Ravencoin
+HOT,Holo
+BONE,Bone ShibaSwap
+XEM,NEM
+XDC,XDC Network
+DCR,Decred
+T,Threshold
+TFUEL,Theta Fuel
+FET,Fetch.ai
+CFX,Conflux
+BAL,Balancer
+ONE,Harmony
+SSV,ssv.network
+JASMY,JasmyCoin
+QTUM,Qtum
+AUDIO,Audius
+GALA,Gala
+ENS,Ethereum Name Service
+SUSHI,SushiSwap
+ANKR,Ankr
+INJ,Injective
+XCN,Onyxcoin
+BTG,Bitcoin Gold
+GLMR,Moonbeam
+IOTX,IoTeX
+OCEAN,Ocean Protocol
+WAVES,Waves
+XCH,Chia
+MASK,Mask Network
+GNO,Gnosis
+GMT,STEPN
+KDA,Kadena
+USTC,TerraClassicUSD
+YFI,yearn.finance
+JST,JUST
+BAND,Band Protocol
+GLM,Golem
+SKL,SKALE
+ELON,Dogelon Mars
+SC,Siacoin
+LPT,Livepeer
+OMG,OMG Network
+FLUX,Flux
+RSR,Reserve Rights
+ICX,ICON
+BICO,Biconomy
+XYM,Symbol
+CHSB,SwissBorg
+ONT,Ontology
+IOST,IOST
+ZRX,0x
+SYN,Synapse
+HIVE,Hive
+SFP,SafePal
+DAO,DAO Maker
+AMP,Amp
+SXP,Solar
+BORA,BORA
+STORJ,Storj
+STG,Stargate Finance
+ILV,Illuvium
+POLY,Polymath
+WAXP,WAX
+CKB,Nervos Network
+ZEN,Horizen
+METIS,MetisDAO
+KEEP,Keep Network
+DGB,DigiByte
+EVER,Everscale
+RLC,iExec RLC
+TKO,Toko Token
+LSK,Lisk
+CELR,Celer Network
+HFT,Hashflow
+SYS,Syscoin
+PEOPLE,ConstitutionDAO
+UMA,UMA
+KNC,Kyber Network Crystal v2
+HOOK,Hooked Protocol
+NFT,APENFT
+TRAC,OriginTrail
+MC,Merit Circle
+VGX,Voyager Token
+MOB,MobileCoin
+PLA,PlayDapp
+EWT,Energy Web Token
+SLP,Smooth Love Potion
+ELF,aelf
+BTRST,Braintrust
+SCRT,Secret
+CHR,Chromia
+HEX,HEX
+WTRX,Wrapped TRON
+stETH,Lido Staked ETH
+BTCB,Bitcoin BEP2
+WBNB,Wrapped BNB
+TMG,T-mac DAO
+FRAX,Frax
+HBTC,Huobi BTC
+BTTOLD,BitTorrent
+TNC,TNC Coin
+FTT,FTX Token
+BGB,Bitget Token
+XRD,Radix
+WEMIX,WEMIX
+FLOKI,FLOKI
+XAUT,Tether Gold
+BabyDoge,Baby Doge Coin
+NXM,NXM
+LN,LINK
+DFI,DeFiChain
+USDJ,USDJ
+MV,GensoKishi Metaverse
+LUSD,Liquity USD
+ALI,Artificial Liquid Intelligence
+ANY,Anyswap
+EDGT,Edgecoin
+BRISE,Bitgert
+COCOS,Cocos-BCX
+TEL,Telcoin
+LYXe,LUKSO
+WEVER,Wrapped Everscale
+BDX,Beldex
+RON,Ronin
+TSUKA,Dejitaru Tsuka
+VVS,VVS Finance
+GTC,Gitcoin
+MED,MediBloc
+API3,API3
+EURS,STASIS EURO
+MX,MX TOKEN
+GAL,Galxe
+ACH,Alchemy Pay
+PUNDIX,Pundi X (New)
+KAS,Kaspa
+NMR,Numeraire
+XTN,Neutrino Index
+XNO,Nano
+ANT,Aragon
+COTI,COTI
+CEL,Celsius
+RBN,Ribbon Finance
+CTC,Creditcoin
+POLYX,Polymesh
+AXL,Axelar
+SNT,Status
+TRIBE,Tribe
+CVC,Civic
+CFG,Centrifuge
+DENT,Dent
+LOCUS,Locus Chain
+REP,Augur
+REQ,Request
+HIGH,Highstreet
+LOOKS,LooksRare
+ONG,Ontology Gas
+CTSI,Cartesi
+PYR,Vulcan Forged PYR
+NYM,NYM
+NU,NuCypher
+DEXE,DeXe
+MVL,MVL
+SAITAMA,Saitama
+VTHO,VeThor Token
+ORBS,Orbs
+RAD,Radicle
+vUSDC,Venus USDC
+ARDR,Ardor
+SPELL,Spell Token
+MBOX,MOBOX
+VRA,Verasity
+ALPHA,Alpha Venture DAO
+HUM,Humanscape
+STEEM,Steem
+ERG,Ergo
+MNW,Morpheus.Network
+DUSK,Dusk Network
+POWR,Powerledger
+DKA,dKargo
+AVINOC,AVINOC
+PHA,Phala Network
+LCX,LCX
+VOLT,Volt Inu V2
+POND,Marlin
+PROM,Prom
+IQ,IQ
+SRM,Serum
+CEEK,CEEK VR
+WIN,WINkLink
+USDX,USDX [Kava]
+REN,Ren

@@ -1,0 +1,41 @@
+ ---------------------------------------------------------
+
+ตาราง stock_price_day
+
+Date,Open,High,Low,Close,Adj Close,Volume,SymbolId
+
+----------------------------------------------------------
+
+ตาราง stock_price_hours
+
+Datetime,Open,High,Low,Close,Adj Close,Volume,SymbolId
+
+----------------------------------------------------------
+
+ตาราง Information 
+
+SymbolId,Symbol,Sname,Description,MarketId
+
+----------------------------------------------------------
+
+ตาราง Industry
+
+IndustryId,Short_Industry,Full_Industry
+
+----------------------------------------------------------
+
+ตาราง Sector
+
+SectorId,Short_Sector,Full_Sector,MarketId
+
+----------------------------------------------------------
+
+ตาราง Market
+
+MarketId,Mname
+
+----------------------------------------------------------
+
+ตาราง News
+NewsId,Date,Title,Description,Img,Link,Source,Content
+

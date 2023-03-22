@@ -1,0 +1,29 @@
+Short_Sector,Full_Sector,SectorId
+AGRI,Agribusiness,1
+FOOD,Food & Beverage,2
+FASHION,Fashion,3
+HOME,Home & Office Products,4
+PERSON,Personal Products & Pharmaceuticals,5
+BANK,Banking,6
+FIN,Finance & Securities,7
+INSUR,Insurance,8
+AUTO,Automotive,9
+IMM,Industrial Materials & Machinery,10
+PAPER,Paper & Printing Materials,11
+PETRO,Petrochemicals & Chemicals,12
+PKG,Packaging,13
+STEEL,Steel and Metal Products,14
+CONMAT,Construction Materials,15
+PROP,Property Development,16
+PF&REIT,Property Fund & REITs,17
+CONS,Construction Services,18
+ENERG,Energy & Utilities,19
+MINE,Mining,20
+COMM,Commerce,21
+HELTH,Health Care Services,22
+MEDIA,Media & Publishing,23
+PROF,Professional Services,24
+TOURISM,Tourism & Leisure,25
+TRANS,Transportation & Logistics,26
+ETRON,Electronic Components,27
+ICT,Information & Communication Technology,28

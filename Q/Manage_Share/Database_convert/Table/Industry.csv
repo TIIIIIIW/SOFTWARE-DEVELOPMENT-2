@@ -1,0 +1,9 @@
+Short_Industry,Full_Industry,IndustryId
+AGRO,Agro & Food Industry,1
+CONSUMP,Consumer Products,2
+FINCIAL,Financials,3
+INDUS,Industrials,4
+PROPCON,Property & Construction,5
+RESOURC,Resources,6
+SERVICE,Services,7
+TECH,Technology,8
